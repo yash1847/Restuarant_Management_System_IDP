@@ -8,7 +8,7 @@ namespace Restuarant_Management_System_IDP.Controllers
         {
             return View();
         }
-        public IActionResult Signup()
+        public IActionResult Register()
         {
             return View();
         }
