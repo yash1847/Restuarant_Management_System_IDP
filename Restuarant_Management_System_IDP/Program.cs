@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Restuarant_Management_System_IDP.Models;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,34 +1,54 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Restaurant Management System</title>
-    <link rel="stylesheet" href="~/css/main.css">
-</head>
-<body>
-    <header>
-        <h1>Login</h1>
-    </header>
-    <main>
-        <section id="login">
-            <form id="loginForm">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-                <button type="submit">Login</button>
-                <br>
-                <div>
-                <a href="forgot-password.html">Forgot Password?</a>
-                <a href="signup">Sign Up</a>
-                <</div>
-            </form>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2024 Restaurant Management System</p>
-    </footer>
-    <script src="scripts/main.js"></script>
-</body>
-</html>
+﻿@model Restuarant_Management_System_IDP.Models.Login
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+<h4>Login</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="LoginId" class="control-label"></label>
+                <input asp-for="LoginId" class="form-control" />
+                <span asp-validation-for="LoginId" class="text-danger"></span>
+            </div>
+            @* <div class="form-group"> *@
+            @*     <label asp-for="Email" class="control-label"></label> *@
+            @*     <input asp-for="Email" class="form-control" /> *@
+            @*     <span asp-validation-for="Email" class="text-danger"></span> *@
+            @* </div> *@
+
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="Role" class="control-label"></label>
+                @Html.DropDownList("Role", new List<SelectListItem>() {
+                    new SelectListItem(){Text="Admin", Value="Admin"},
+                    new SelectListItem(){Text="Customer", Value="Customer"},
+                }, "Select Role") 
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    Not Registered? <a asp-action="Register">Signup</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
