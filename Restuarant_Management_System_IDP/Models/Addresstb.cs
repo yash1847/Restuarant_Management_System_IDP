@@ -14,7 +14,7 @@ namespace Restuarant_Management_System_IDP.Models
         public int AddressId { get; set; }
 
         [ForeignKey("User")]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         [Required]
         public  AddressTypes AddressType { get; set; }

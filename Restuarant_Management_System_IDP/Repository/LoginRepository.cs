@@ -52,7 +52,7 @@ namespace Restuarant_Management_System_IDP.Repository
             Login login = context.Logins.Find(id);
             if (login != null)
             {
-                login.Email = item.Email;
+                //login.Email = item.Email;
                 login.Password = item.Password;
                 return context.SaveChanges() > 0;
             }
