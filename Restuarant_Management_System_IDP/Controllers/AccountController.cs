@@ -1,10 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Restuarant_Management_System_IDP.Models;
+using Restuarant_Management_System_IDP.Repository;
 
 namespace Restuarant_Management_System_IDP.Controllers
 {
     public class AccountController : Controller
     {
+        LoginRepository loginrepo;
+        UserRepository userrepo;
+
+        public AccountController()
+        {
+        }
+
         [HttpGet]
         public IActionResult Login()
         {
@@ -39,16 +47,22 @@ namespace Restuarant_Management_System_IDP.Controllers
                 return View();
             }
 
-            string customerId = frmc["User.CustomerId"];
-            string email = frmc["email"];
-            string password = frmc["password"];
-            string firstname = frmc["firstname"];
-            string lastname = frmc["lastname"];
-            string contact = frmc["contact"];
-            string address = frmc["address"];
-            string city = frmc["city"];
-            string pincode = frmc["pincode"];
-            return Content(customerId);
+            User user = new User()
+            {
+                CustomerId = frmc["User.CustomerId"],
+                FirstName = frmc["User.FirstName"],
+                LastName = frmc["User.LastName"],
+                Email = frmc["User.Email"],
+                Contact = frmc["User.Contact"]
+            };
+            Login login = new Login()
+            {
+                LoginId = frmc["User.CustomerId"],
+                Password = frmc["Login.Password"],
+                Role = Roles.Customer
+            };
+
+            
         }
     }
 }
