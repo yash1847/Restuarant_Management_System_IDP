@@ -21,12 +21,13 @@ namespace Restuarant_Management_System_IDP.Models
         [EmailAddress(ErrorMessage = "Invalid Error Address")]
         public string Email { get; set; }
 
-        [Required,DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"[7-9]{1}[0-9]{9}",ErrorMessage = "Invalid mobile no")]
-        //[Phone(ErrorMessage = "Invalid Phone Number")]
+        [Required]
+        //[DataType(DataType.PhoneNumber)]
+        //[RegularExpression(@"[7-9]{1}[0-9]{9}",ErrorMessage = "Invalid mobile no")]
+        [Phone(ErrorMessage = "Invalid Phone Number")]
         public string Contact {  get; set; }
 
-        [DataType(DataType.PhoneNumber)]
+        //[DataType(DataType.PhoneNumber)]
         [Phone(ErrorMessage = "Invalid Phone Number")]
         public string? Contact2 { get; set; }
 
