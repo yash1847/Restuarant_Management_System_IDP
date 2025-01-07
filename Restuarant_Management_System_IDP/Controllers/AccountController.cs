@@ -38,6 +38,11 @@ namespace Restuarant_Management_System_IDP.Controllers
             return View();
         }
 
+        public IActionResult Usertable()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult Register(IFormCollection frmc) 
         {
@@ -47,6 +52,7 @@ namespace Restuarant_Management_System_IDP.Controllers
                 return View();
             }
 
+<<<<<<< HEAD
             User user = new User()
             {
                 CustomerId = frmc["User.CustomerId"],
@@ -63,6 +69,10 @@ namespace Restuarant_Management_System_IDP.Controllers
             };
 
             
+=======
+            string customerId = frmc["User.CustomerId"];
+            return Content(customerId);
+>>>>>>> master
         }
     }
 }
