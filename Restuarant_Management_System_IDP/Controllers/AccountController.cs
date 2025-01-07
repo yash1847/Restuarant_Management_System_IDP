@@ -39,7 +39,7 @@ namespace Restuarant_Management_System_IDP.Controllers
                 return View();
             }
 
-            string customerId = frmc["customerId"];
+            string customerId = frmc["User.CustomerId"];
             string email = frmc["email"];
             string password = frmc["password"];
             string firstname = frmc["firstname"];
