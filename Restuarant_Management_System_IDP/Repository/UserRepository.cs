@@ -1,12 +1,25 @@
 ﻿using Restuarant_Management_System_IDP.Models;
+using Restuarant_Management_System_IDP.Repository.IRepository;
 using System.Diagnostics;
 
 namespace Restuarant_Management_System_IDP.Repository
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : Repository<User>, IUserRepository
+        //: IRepository<User>
     {
-        public RestaurantDbContext context;
+        public RestaurantDbContext _db;
 
+        public UserRepository(RestaurantDbContext db) : base(db)
+        {
+            _db = db;
+        }
+
+        public void Update(User obj)
+        {
+            _db.Users.Update(obj);
+        }
+
+        /*
         public UserRepository(RestaurantDbContext context)
         {
             this.context = context;
@@ -61,5 +74,6 @@ namespace Restuarant_Management_System_IDP.Repository
             }
             return false;
         }
+        */
     }
 }

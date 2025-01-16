@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Restuarant_Management_System_IDP.Models;
+using Restuarant_Management_System_IDP.Repository.IRepository;
+using Restuarant_Management_System_IDP.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,7 @@ builder.Services.AddControllersWithViews();
 
 string conString = builder.Configuration.GetConnectionString("sqlcon");
 builder.Services.AddDbContext<RestaurantDbContext>(options => options.UseSqlServer(conString));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); //repository
 
 var app = builder.Build();
 
