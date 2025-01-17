@@ -11,8 +11,8 @@ using Restuarant_Management_System_IDP.Models;
 namespace Restuarant_Management_System_IDP.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    [Migration("20250106094407_initialMigration")]
-    partial class initialMigration
+    [Migration("20250117114032_InitialSeed")]
+    partial class InitialSeed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,17 +37,17 @@ namespace Restuarant_Management_System_IDP.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("AddressType")
-                        .HasColumnType("int");
+                    b.Property<string>("AddressType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<string>("CustomerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(15)");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Pincode")
                         .IsRequired()
@@ -61,35 +61,16 @@ namespace Restuarant_Management_System_IDP.Migrations
                     b.ToTable("Addressess");
                 });
 
-            modelBuilder.Entity("Restuarant_Management_System_IDP.Models.Login", b =>
-                {
-                    b.Property<string>("LoginId")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
-
-                    b.HasKey("LoginId");
-
-                    b.ToTable("Logins");
-                });
-
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.User", b =>
                 {
-                    b.Property<string>("CustomerId")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Contact")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Contact2")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -97,18 +78,39 @@ namespace Restuarant_Management_System_IDP.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("LastName")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("CustomerId");
+                    b.HasKey("UserId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            Contact = "9999999999",
+                            Email = "admin@gmail.com",
+                            FullName = "Admin",
+                            Password = "Admin123",
+                            Role = "Admin",
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.Addresstb", b =>

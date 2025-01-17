@@ -5,38 +5,27 @@
 namespace Restuarant_Management_System_IDP.Migrations
 {
     /// <inheritdoc />
-    public partial class initialMigration : Migration
+    public partial class InitialSeed : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Logins",
-                columns: table => new
-                {
-                    LoginId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Logins", x => x.LoginId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    CustomerId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Contact = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Contact2 = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.CustomerId);
+                    table.PrimaryKey("PK_Users", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,8 +34,8 @@ namespace Restuarant_Management_System_IDP.Migrations
                 {
                     AddressId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerId = table.Column<string>(type: "nvarchar(15)", nullable: false),
-                    AddressType = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    AddressType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     City = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Pincode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false)
@@ -58,9 +47,14 @@ namespace Restuarant_Management_System_IDP.Migrations
                         name: "FK_Addressess_Users_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Users",
-                        principalColumn: "CustomerId",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserId", "Contact", "Email", "FullName", "Password", "Role", "UserName" },
+                values: new object[] { 1, "9999999999", "admin@gmail.com", "Admin", "Admin123", "Admin", "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addressess_CustomerId",
@@ -73,9 +67,6 @@ namespace Restuarant_Management_System_IDP.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Addressess");
-
-            migrationBuilder.DropTable(
-                name: "Logins");
 
             migrationBuilder.DropTable(
                 name: "Users");

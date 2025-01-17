@@ -1,24 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Restuarant_Management_System_IDP.Models;
+using Restuarant_Management_System_IDP.Models.ViewModels;
 
 namespace Restuarant_Management_System_IDP.Models
 {
     public class RestaurantDbContext : DbContext
     {
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Addresstb> Addressess { get; set; }
+
         public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options){ }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-                    }
 
-        public virtual DbSet<Login> Logins { get; set; }
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Addresstb> Addressess { get; set; }
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                UserId = 1,
+                UserName = "admin",
+                FullName = "Admin",
+                Email = "admin@gmail.com",
+                Contact = "9999999999",
+                Password = "Admin123",
+                Role = "Admin"
+            });
+
+        }
+
+        
     }
 }

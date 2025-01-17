@@ -1,4 +1,4 @@
-﻿@model Restuarant_Management_System_IDP.Models.Login
+﻿@model Restuarant_Management_System_IDP.Models.ViewModels.LoginViewModel
 
 @{
     ViewData["Title"] = "Login";
@@ -6,41 +6,34 @@
 
 <h1>Login</h1>
 
-<h4>Login</h4>
+<h4>LoginViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="LoginId" class="control-label"></label>
-                <input asp-for="LoginId" class="form-control" />
-                <span asp-validation-for="LoginId" class="text-danger"></span>
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <br>
+            <br />
             <div class="form-group">
-                <label asp-for="Role" class="control-label"></label>
-                @Html.DropDownList("Role", new List<SelectListItem>() {
-                    new SelectListItem(){Text="Admin", Value="Admin"},
-                    new SelectListItem(){Text="Customer", Value="Customer"},
-                }, "Select Role") 
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
-            <br>
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
+<br />
 <div>
-    Not Registered? <a asp-action="Register">Signup</a>
+    Don't have an Account? 
+    <a asp-action="Register" asp-controller="Account">  Register</a>
 </div>
 
 @section Scripts {

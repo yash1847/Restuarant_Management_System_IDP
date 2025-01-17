@@ -8,9 +8,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-string conString = builder.Configuration.GetConnectionString("sqlcon");
-builder.Services.AddDbContext<RestaurantDbContext>(options => options.UseSqlServer(conString));
+//Adding Dbcontext 
+//string conString = builder.Configuration.GetConnectionString("sqlcon");
+builder.Services.AddDbContext<RestaurantDbContext>(options => 
+        options.UseSqlServer(builder.Configuration.GetConnectionString("sqlcon"))
+);
+
+//Adding UnitofWork
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); //repository
+
+// Add session services
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout duration
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -26,6 +39,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthorization();
 

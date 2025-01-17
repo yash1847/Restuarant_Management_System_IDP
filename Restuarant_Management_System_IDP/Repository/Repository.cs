@@ -26,7 +26,7 @@ namespace Restuarant_Management_System_IDP.Repository
             dbSet.Remove(entity);
         }
 
-        public T Get(Expression<Func<T, bool>> filter)
+        public T? Get(Expression<Func<T, bool>> filter)
         {
             IQueryable<T> query = dbSet.Where(filter);
             return query.FirstOrDefault();
@@ -43,7 +43,7 @@ namespace Restuarant_Management_System_IDP.Repository
             return query.ToList();
         }
 
-        public T Search(object id)
+        public T? Search(object id)
         {
             return dbSet.Find(id);
         }

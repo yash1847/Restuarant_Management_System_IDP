@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Restuarant_Management_System_IDP.Models;
+using Restuarant_Management_System_IDP.Models.ViewModels;
 using Restuarant_Management_System_IDP.Repository;
 using Restuarant_Management_System_IDP.Repository.IRepository;
 
@@ -7,8 +8,6 @@ namespace Restuarant_Management_System_IDP.Controllers
 {
     public class AccountController : Controller
     {
-        //LoginRepository loginrepo;
-        //UserRepository userrepo;
 
         private readonly IUnitOfWork _unitOfWork;
 
@@ -20,14 +19,33 @@ namespace Restuarant_Management_System_IDP.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-
             return View();
         }
 
         [HttpPost]
-        public IActionResult Login(IFormCollection frmc)
-        {  
-
+        public IActionResult Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User? user = _unitOfWork.User.Get(u => u.UserName == model.Username);
+                if (user == null)
+                {
+                    return Content("User does not exist");
+                }
+                if (user.Password != model.Password)
+                {
+                    return Content("Invalid user or password");
+                }
+                if(user.Role == "Admin")
+                {
+                    return Content("Admin logged in");
+                }
+                else if(user.Role == "User")
+                {
+                    return Content("User logged in");
+                }
+                return Content("Invalid role");
+            }
             return View();
         }
 
@@ -37,39 +55,30 @@ namespace Restuarant_Management_System_IDP.Controllers
             return View();
         }
 
-        public IActionResult Usertable()
-        {
-            return View();
-        }
-
         [HttpPost]
-        public IActionResult Register(IFormCollection frmc) 
+        public IActionResult Register(RegisterViewModel model) 
         {
             if (!ModelState.IsValid)
             {
-                //invalid
                 return View();
             }
-
-            User user = new User()
+            User? existing_user = _unitOfWork.User.Get(u => u.UserName == model.UserName);
+            if (existing_user != null)
             {
-                CustomerId = frmc["User.CustomerId"],
-                FirstName = frmc["User.FirstName"],
-                LastName = frmc["User.LastName"],
-                Email = frmc["User.Email"],
-                Contact = frmc["User.Contact"]
-            };
-            Login login = new Login()
+                return Content("Existing user");
+            }
+            User newUser = new User()
             {
-                LoginId = frmc["User.CustomerId"],
-                Password = frmc["Login.Password"],
-                Role = Roles.Customer
+                UserName = model.UserName,
+                FullName = model.FullName,
+                Password = model.Password,
+                Email = model.Email,
+                Contact = model.Contact,
+                Role = "User"
             };
-            //loginrepo.Add(login);
-            //userrepo.Add(user);
-            _unitOfWork.Login.Add(login);
-            _unitOfWork.User.Add(user);
-            return Content("Success");
+            _unitOfWork.User.Add(newUser);
+            _unitOfWork.Save();
+            return Content("User added successfully");
         }
     }
 }
