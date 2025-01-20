@@ -1,7 +1,9 @@
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Restuarant_Management_System_IDP.Models;
 using Restuarant_Management_System_IDP.Repository.IRepository;
 using Restuarant_Management_System_IDP.Repository;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +16,14 @@ builder.Services.AddDbContext<RestaurantDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("sqlcon"))
 );
 
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                    .AddEntityFrameworkStores<RestaurantDbContext>();
+
+
 //Adding UnitofWork
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); //repository
+
+builder.Services.AddHttpContextAccessor();
 
 // Add session services
 builder.Services.AddSession(options =>
@@ -39,7 +47,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseSession();
+app.UseSession(); //using session services
 
 app.UseAuthorization();
 

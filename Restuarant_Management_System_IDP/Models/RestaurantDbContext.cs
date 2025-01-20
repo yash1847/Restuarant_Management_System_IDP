@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Restuarant_Management_System_IDP.Models;
 using Restuarant_Management_System_IDP.Models.ViewModels;
 
 namespace Restuarant_Management_System_IDP.Models
 {
-    public class RestaurantDbContext : DbContext
+    public class RestaurantDbContext : IdentityDbContext
     {
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Addresstb> Addressess { get; set; }

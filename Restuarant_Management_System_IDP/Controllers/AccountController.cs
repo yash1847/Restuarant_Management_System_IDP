@@ -36,12 +36,17 @@ namespace Restuarant_Management_System_IDP.Controllers
                 {
                     return Content("Invalid user or password");
                 }
+                HttpContext.Session.SetString("username",model.Username);
                 if(user.Role == "Admin")
                 {
+                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index","Admin");
                     return Content("Admin logged in");
                 }
                 else if(user.Role == "User")
                 {
+                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Customer");
                     return Content("User logged in");
                 }
                 return Content("Invalid role");
@@ -79,6 +84,25 @@ namespace Restuarant_Management_System_IDP.Controllers
             _unitOfWork.User.Add(newUser);
             _unitOfWork.Save();
             return Content("User added successfully");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Profile()
+        {
+            var username = HttpContext.Session.GetString("username");
+            if(username == "admin")
+            {
+                return RedirectToAction("Profile", "Admin");
+            }
+            else
+            {
+                return RedirectToAction("Profile", "Customer");
+            }
         }
     }
 }

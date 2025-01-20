@@ -3,6 +3,8 @@
     public interface IUnitOfWork
     {
         IUserRepository User { get; }
+
+        IAddresstbRepository Addresstb { get; }
         void Save();
     }
 }

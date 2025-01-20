@@ -8,5 +8,9 @@ namespace Restuarant_Management_System_IDP.Controllers
         {
             return View();
         }
+        public IActionResult Profile()
+        {
+            return Content("User profile menu");
+        }
     }
 }
