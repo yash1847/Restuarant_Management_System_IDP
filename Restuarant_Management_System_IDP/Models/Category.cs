@@ -9,6 +9,12 @@ namespace Restuarant_Management_System_IDP.Models
 {
     public class Category
     {
+        public Category()
+        {
+            MenuItems = new List<MenuItem>();
+            SubCategories = new List<SubCategory>();
+        }
+
         [Key]
         public int Id { get; set; }
 
