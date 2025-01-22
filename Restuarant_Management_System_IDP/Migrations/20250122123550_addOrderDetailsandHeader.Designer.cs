@@ -12,8 +12,8 @@ using Restuarant_Management_System_IDP.Data;
 namespace Restuarant_Management_System_IDP.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    [Migration("20250122045458__addShoppingcart")]
-    partial class _addShoppingcart
+    [Migration("20250122123550_addOrderDetailsandHeader")]
+    partial class addOrderDetailsandHeader
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -323,7 +323,7 @@ namespace Restuarant_Management_System_IDP.Migrations
                     b.ToTable("MenuItems");
                 });
 
-            modelBuilder.Entity("Restuarant_Management_System_IDP.Models.ShoppingCart", b =>
+            modelBuilder.Entity("Restuarant_Management_System_IDP.Models.OrderDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -331,22 +331,67 @@ namespace Restuarant_Management_System_IDP.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("Count")
                         .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MenuItemId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("ApplicationUserID");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("MenuItemId");
 
-                    b.ToTable("ShoppingCarts");
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderDetails");
+                });
+
+            modelBuilder.Entity("Restuarant_Management_System_IDP.Models.OrderHeader", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("OrderTotal")
+                        .HasColumnType("float");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PickUpDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("PickUpTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("OrderHeaders");
                 });
 
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.SubCategory", b =>
@@ -477,7 +522,7 @@ namespace Restuarant_Management_System_IDP.Migrations
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.Addresstb", b =>
                 {
                     b.HasOne("Restuarant_Management_System_IDP.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
+                        .WithMany("Addresstbs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -492,13 +537,13 @@ namespace Restuarant_Management_System_IDP.Migrations
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.MenuItem", b =>
                 {
                     b.HasOne("Restuarant_Management_System_IDP.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("MenuItems")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Restuarant_Management_System_IDP.Models.SubCategory", "SubCategory")
-                        .WithMany()
+                        .WithMany("MenuItems")
                         .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -508,32 +553,64 @@ namespace Restuarant_Management_System_IDP.Migrations
                     b.Navigation("SubCategory");
                 });
 
-            modelBuilder.Entity("Restuarant_Management_System_IDP.Models.ShoppingCart", b =>
+            modelBuilder.Entity("Restuarant_Management_System_IDP.Models.OrderDetail", b =>
                 {
-                    b.HasOne("Restuarant_Management_System_IDP.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID");
-
                     b.HasOne("Restuarant_Management_System_IDP.Models.MenuItem", "MenuItem")
                         .WithMany()
                         .HasForeignKey("MenuItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ApplicationUser");
+                    b.HasOne("Restuarant_Management_System_IDP.Models.OrderHeader", "OrderHeader")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("MenuItem");
+
+                    b.Navigation("OrderHeader");
+                });
+
+            modelBuilder.Entity("Restuarant_Management_System_IDP.Models.OrderHeader", b =>
+                {
+                    b.HasOne("Restuarant_Management_System_IDP.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("OrderHeaders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.SubCategory", b =>
                 {
                     b.HasOne("Restuarant_Management_System_IDP.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("SubCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Restuarant_Management_System_IDP.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Addresstbs");
+
+                    b.Navigation("OrderHeaders");
+                });
+
+            modelBuilder.Entity("Restuarant_Management_System_IDP.Models.Category", b =>
+                {
+                    b.Navigation("MenuItems");
+
+                    b.Navigation("SubCategories");
+                });
+
+            modelBuilder.Entity("Restuarant_Management_System_IDP.Models.SubCategory", b =>
+                {
+                    b.Navigation("MenuItems");
                 });
 
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.Usertb", b =>

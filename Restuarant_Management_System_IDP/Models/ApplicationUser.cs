@@ -6,6 +6,13 @@ namespace Restuarant_Management_System_IDP.Models
 {
     public class ApplicationUser:IdentityUser
     {
+        //public ApplicationUser()
+        //{
+        //    Addresstbs = new List<Addresstb>();
+        //    OrderHeaders = new List<OrderHeader>();
+        //    ShoppingCarts = new List<ShoppingCart>();
+        //}
+
         [Required]
         public string FullName { get; set; }
 

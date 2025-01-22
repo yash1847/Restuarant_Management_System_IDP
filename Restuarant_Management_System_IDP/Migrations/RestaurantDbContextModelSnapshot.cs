@@ -394,10 +394,10 @@ namespace Restuarant_Management_System_IDP.Migrations
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.ShoppingCart", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ApplicationUserID")
                         .IsRequired()
@@ -406,16 +406,13 @@ namespace Restuarant_Management_System_IDP.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.Property<int>("MenuItemId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("Id", "MenuItemId");
 
                     b.HasIndex("ApplicationUserID");
 
                     b.HasIndex("MenuItemId");
 
-                    b.ToTable("ShoppingCarts");
+                    b.ToTable("ShoppingCart");
                 });
 
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.SubCategory", b =>

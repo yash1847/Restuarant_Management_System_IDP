@@ -6,24 +6,51 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Restuarant_Management_System_IDP.Migrations
 {
     /// <inheritdoc />
-    public partial class addOrderHeaderandDetails : Migration
+    public partial class addOrderDetailsandHeader : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_ShoppingCarts_AspNetUsers_ApplicationUserID",
-                table: "ShoppingCarts");
+                name: "FK_Addressess_Userstb_CustomerId",
+                table: "Addressess");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Addressess_CustomerId",
+                table: "Addressess");
+
+            migrationBuilder.DropColumn(
+                name: "CustomerId",
+                table: "Addressess");
 
             migrationBuilder.AlterColumn<string>(
-                name: "ApplicationUserID",
-                table: "ShoppingCarts",
+                name: "Image",
+                table: "MenuItems",
+                type: "nvarchar(max)",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Description",
+                table: "MenuItems",
+                type: "nvarchar(max)",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)");
+
+            migrationBuilder.AddColumn<string>(
+                name: "UserId",
+                table: "Addressess",
                 type: "nvarchar(450)",
                 nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "nvarchar(450)",
-                oldNullable: true);
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<int>(
+                name: "UsertbUserId",
+                table: "Addressess",
+                type: "int",
+                nullable: true);
 
             migrationBuilder.CreateTable(
                 name: "OrderHeaders",
@@ -80,6 +107,16 @@ namespace Restuarant_Management_System_IDP.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Addressess_UserId",
+                table: "Addressess",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addressess_UsertbUserId",
+                table: "Addressess",
+                column: "UsertbUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_MenuItemId",
                 table: "OrderDetails",
                 column: "MenuItemId");
@@ -95,20 +132,31 @@ namespace Restuarant_Management_System_IDP.Migrations
                 column: "UserId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ShoppingCarts_AspNetUsers_ApplicationUserID",
-                table: "ShoppingCarts",
-                column: "ApplicationUserID",
+                name: "FK_Addressess_AspNetUsers_UserId",
+                table: "Addressess",
+                column: "UserId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Addressess_Userstb_UsertbUserId",
+                table: "Addressess",
+                column: "UsertbUserId",
+                principalTable: "Userstb",
+                principalColumn: "UserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_ShoppingCarts_AspNetUsers_ApplicationUserID",
-                table: "ShoppingCarts");
+                name: "FK_Addressess_AspNetUsers_UserId",
+                table: "Addressess");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Addressess_Userstb_UsertbUserId",
+                table: "Addressess");
 
             migrationBuilder.DropTable(
                 name: "OrderDetails");
@@ -116,20 +164,61 @@ namespace Restuarant_Management_System_IDP.Migrations
             migrationBuilder.DropTable(
                 name: "OrderHeaders");
 
+            migrationBuilder.DropIndex(
+                name: "IX_Addressess_UserId",
+                table: "Addressess");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Addressess_UsertbUserId",
+                table: "Addressess");
+
+            migrationBuilder.DropColumn(
+                name: "UserId",
+                table: "Addressess");
+
+            migrationBuilder.DropColumn(
+                name: "UsertbUserId",
+                table: "Addressess");
+
             migrationBuilder.AlterColumn<string>(
-                name: "ApplicationUserID",
-                table: "ShoppingCarts",
-                type: "nvarchar(450)",
-                nullable: true,
+                name: "Image",
+                table: "MenuItems",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "",
                 oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
+                oldType: "nvarchar(max)",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Description",
+                table: "MenuItems",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
+                oldNullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "CustomerId",
+                table: "Addressess",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addressess_CustomerId",
+                table: "Addressess",
+                column: "CustomerId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ShoppingCarts_AspNetUsers_ApplicationUserID",
-                table: "ShoppingCarts",
-                column: "ApplicationUserID",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id");
+                name: "FK_Addressess_Userstb_CustomerId",
+                table: "Addressess",
+                column: "CustomerId",
+                principalTable: "Userstb",
+                principalColumn: "UserId",
+                onDelete: ReferentialAction.Cascade);
         }
     }
 }

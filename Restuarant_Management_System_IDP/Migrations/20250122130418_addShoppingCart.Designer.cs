@@ -12,8 +12,8 @@ using Restuarant_Management_System_IDP.Data;
 namespace Restuarant_Management_System_IDP.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    [Migration("20250122083201_addOrderHeaderandDetails")]
-    partial class addOrderHeaderandDetails
+    [Migration("20250122130418_addShoppingCart")]
+    partial class addShoppingCart
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -397,10 +397,10 @@ namespace Restuarant_Management_System_IDP.Migrations
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.ShoppingCart", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ApplicationUserID")
                         .IsRequired()
@@ -409,16 +409,13 @@ namespace Restuarant_Management_System_IDP.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.Property<int>("MenuItemId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("Id", "MenuItemId");
 
                     b.HasIndex("ApplicationUserID");
 
                     b.HasIndex("MenuItemId");
 
-                    b.ToTable("ShoppingCarts");
+                    b.ToTable("ShoppingCart");
                 });
 
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.SubCategory", b =>

@@ -14,7 +14,7 @@ namespace Restuarant_Management_System_IDP.Models
             Count = 1;
         }
 
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
         [Required]

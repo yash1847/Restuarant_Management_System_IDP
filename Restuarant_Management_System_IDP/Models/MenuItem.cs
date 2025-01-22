@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Restuarant_Management_System_IDP.Models
 {
@@ -35,7 +31,6 @@ namespace Restuarant_Management_System_IDP.Models
 
         public virtual Category Category { get; set; } //navigational property
         public virtual SubCategory SubCategory { get; set; } //navigational property
-
         //public virtual ShoppingCart ShoppingCart { get; set; } //nav
 
     }
