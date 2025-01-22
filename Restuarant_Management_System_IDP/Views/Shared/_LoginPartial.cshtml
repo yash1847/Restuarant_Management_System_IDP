@@ -7,25 +7,26 @@
 *@
 <ul class="navbar-nav">
 @{
-    string? user = HttpContextAccessor.HttpContext?.Session.GetString("username");
+    // string? user = HttpContextAccessor.HttpContext?.Session.GetString("username");
 }
 <ul class="nav-item"></ul>
-@if(user == null)
+@* @if(user == null) *@
+@if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a class="nav-link" asp-action="Register" asp-controller="Account">Register</a>
-    </li>
-    <li>
-        <a class="nav-link" asp-action="Login" asp-controller="Account">Login</a>
-    </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-action="Profile" asp-controller="Account">Hi @User.Identity?.Name</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-action="Logout" asp-controller="Account">Logout</a>
+        </li>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link" asp-action="Profile" asp-controller="Account">Hi @user</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-action="Logout" asp-controller="Account">Logout</a>
-    </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-action="Register" asp-controller="Account">Register</a>
+        </li>
+        <li>
+            <a class="nav-link" asp-action="Login" asp-controller="Account">Login</a>
+        </li>
 }
 </ul>

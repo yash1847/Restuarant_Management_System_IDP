@@ -8,8 +8,8 @@ namespace Restuarant_Management_System_IDP.Models
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AddressId { get; set; }
 
-        [ForeignKey("User")]
-        public int CustomerId { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public string UserId { get; set; }
 
         [Required]
         public  string AddressType { get; set; }
@@ -27,6 +27,6 @@ namespace Restuarant_Management_System_IDP.Models
         [MaxLength(6,ErrorMessage = "Invalid PinCode")]
         public string Pincode { get; set; } 
 
-        public User User { get; set; } //navigation property
+        public ApplicationUser ApplicationUser { get; set; } //navigation property
     }
 }

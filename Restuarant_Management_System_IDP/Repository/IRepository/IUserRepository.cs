@@ -2,8 +2,8 @@
 
 namespace Restuarant_Management_System_IDP.Repository.IRepository
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository : IRepository<Usertb>
     {
-        void Update(User obj);
+        void Update(Usertb obj);
     }
 }

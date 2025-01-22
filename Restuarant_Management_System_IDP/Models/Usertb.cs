@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Restuarant_Management_System_IDP.Models
 {
-    public class User
+    public class Usertb
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }

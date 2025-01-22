@@ -15,16 +15,40 @@
             <div class="container-fluid">
                 <a class="navbar-brand fs-4" asp-area="" asp-controller="Home" asp-action="Index">Food Bytes</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     @* Add login partial view to display user name*@
                     @* <partial name="_LoginPartial" /> *@
                     <ul class="navbar-nav flex-grow-1">
+                        
+                        @if (User.IsInRole(SD.Admin)){
+                        @* {  *@
+                        @*     <li class="nav-item dropdown text-white-50">  *@
+                        @*        <a class="nav-link dropdown-toggle" href="#" id="navbarDropDownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  *@
+                        @*           Content Management  *@
+                        @*       </a> *@
+                        @*          <div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink"> *@
+                                    
                         <li class="nav-item">
-                            <a class="nav-link text-white-50" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-action="Index" asp-controller="Category">Category</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="Index" asp-controller="SubCategory">Sub Category</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="Index" asp-controller="MenuItem">MenuItem</a>
+                        </li>
+                        }
+                        @* <a class="nav-link" asp-action="Index" asp-controller="User">Users</a> *@
+
+                                    @* <li class="nav-item"></li> *@
+
+                                @* </div> *@
+
+                            @* </li> *@
+                        @* } *@
                         <li class="nav-item">
                             <a class="nav-link text-white-50" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>

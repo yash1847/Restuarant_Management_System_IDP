@@ -36,6 +36,6 @@ namespace Restuarant_Management_System_IDP.Models.ViewModels
         public string ConfirmPassword { get; set; }
 
         [ValidateNever]
-        public string Role { get; set; }
+        public string Role { get; set; } = "Customer";
     }
 }

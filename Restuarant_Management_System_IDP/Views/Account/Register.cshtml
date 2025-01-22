@@ -1,11 +1,15 @@
-﻿@model Restuarant_Management_System_IDP.Models.ViewModels.RegisterViewModel
+﻿@model RegisterViewModel
 
 @{
     ViewData["Title"] = "Register";
 }
 
+@if(User.IsInRole(SD.Admin)){
+    <h1>Register a new Employee</h1>
+}
+else{
 <h1>Create your Account</h1>
-
+}
 @* <h4>RegisterViewModel</h4> *@
 <hr />
 <div class="row">
@@ -48,6 +52,18 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             <br />
+            @if (User.IsInRole(SD.Admin))
+            {
+                <div class="form-group">
+                    <div class="col-3">
+                    </div>
+                    <div class="col-8">
+                        <input type="radio" name="rdUserRole" value="@SD.Kitchen" checked /> @SD.Kitchen
+                        <input type="radio" name="rdUserRole" value="@SD.FrontDesk" /> @SD.FrontDesk
+                        @* <input type="radio" name="rdUserRole" value="@SD.Admin" /> @SD.Admin *@
+                    </div>
+                </div>
+            }
             <div class="form-group">
                 <input type="submit" value="Register" class="btn btn-primary" />
             </div>

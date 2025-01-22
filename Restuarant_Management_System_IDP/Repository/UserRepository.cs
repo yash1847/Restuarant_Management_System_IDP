@@ -1,10 +1,11 @@
-﻿using Restuarant_Management_System_IDP.Models;
+﻿using Restuarant_Management_System_IDP.Data;
+using Restuarant_Management_System_IDP.Models;
 using Restuarant_Management_System_IDP.Repository.IRepository;
 using System.Diagnostics;
 
 namespace Restuarant_Management_System_IDP.Repository
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class UserRepository : Repository<Usertb>, IUserRepository
         //: IRepository<User>
     {
         public RestaurantDbContext _db;
@@ -14,9 +15,9 @@ namespace Restuarant_Management_System_IDP.Repository
             _db = db;
         }
 
-        public void Update(User obj)
+        public void Update(Usertb obj)
         {
-            _db.Users.Update(obj);
+            _db.Userstb.Update(obj);
         }
 
         /*

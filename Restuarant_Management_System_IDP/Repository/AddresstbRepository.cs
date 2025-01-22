@@ -1,11 +1,12 @@
-﻿using Restuarant_Management_System_IDP.Models;
+﻿using Restuarant_Management_System_IDP.Data;
+using Restuarant_Management_System_IDP.Models;
 using Restuarant_Management_System_IDP.Repository.IRepository;
 
 namespace Restuarant_Management_System_IDP.Repository
 {
     public class AddresstbRepository : Repository<Addresstb>, IAddresstbRepository
     {
-        public RestaurantDbContext _db;
+        private readonly RestaurantDbContext _db;
 
         public AddresstbRepository(RestaurantDbContext db):base(db)
         {

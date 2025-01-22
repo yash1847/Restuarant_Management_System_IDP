@@ -1,3 +1,8 @@
 ﻿@using Restuarant_Management_System_IDP
 @using Restuarant_Management_System_IDP.Models
+@using Restuarant_Management_System_IDP.Models.ViewModels
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<ApplicationUser> SignInManager;
+@inject UserManager<ApplicationUser> UserManager;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
