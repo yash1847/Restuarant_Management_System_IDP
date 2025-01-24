@@ -14,7 +14,12 @@ namespace Restuarant_Management_System_IDP.Repository
 
         public void Update(Category obj)
         {
-            throw new NotImplementedException();
+            _db.Categories.Update(obj);
         }
+
+        //public virtual void Delete(Category obj)
+        //{
+            
+        //}
     }
 }

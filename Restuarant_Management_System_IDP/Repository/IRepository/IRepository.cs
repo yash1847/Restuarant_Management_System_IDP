@@ -8,7 +8,7 @@ namespace Restuarant_Management_System_IDP.Repository.IRepository
         void Add(T entity);
         void Delete(T entity);
         T? Search(object id);
-        T? Get(Expression<Func<T, bool>> filter);
-        IEnumerable<T> GetAll(Expression<Func<T, bool>> filter);
+        T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false);
+        IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
     }
 }

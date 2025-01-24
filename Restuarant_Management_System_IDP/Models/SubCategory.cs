@@ -13,6 +13,7 @@ namespace Restuarant_Management_System_IDP.Models
         {
             MenuItems = new List<MenuItem>();
         }
+
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 

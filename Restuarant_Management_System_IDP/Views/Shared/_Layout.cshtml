@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Restuarant_Management_System_IDP.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body class="search-background fs-5">
     <header>
@@ -32,10 +36,10 @@
                         @*          <div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink"> *@
                                     
                         <li class="nav-item">
-                            <a class="nav-link" asp-action="Index" asp-controller="Category">Category</a>
+                            <a class="nav-link" asp-action="Category" asp-controller="ManageMenu">Category</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-action="Index" asp-controller="SubCategory">Sub Category</a>
+                            <a class="nav-link" asp-action="SubCategory" asp-controller="ManageMenu">Sub Category</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-action="Index" asp-controller="MenuItem">MenuItem</a>
@@ -73,6 +77,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

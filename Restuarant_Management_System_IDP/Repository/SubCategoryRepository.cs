@@ -1,4 +1,5 @@
-﻿using Restuarant_Management_System_IDP.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Restuarant_Management_System_IDP.Data;
 using Restuarant_Management_System_IDP.Models;
 using Restuarant_Management_System_IDP.Repository.IRepository;
 

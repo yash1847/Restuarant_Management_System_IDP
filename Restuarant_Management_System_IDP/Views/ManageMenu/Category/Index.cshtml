@@ -1,8 +1,9 @@
-﻿@model IEnumerable<Restuarant_Management_System_IDP.Models.Category>
+﻿@model IEnumerable<Category>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string deletemessage = "Once deleted, you will not be able to recover";
 }
 
 <h1>Index</h1>
@@ -13,9 +14,9 @@
         <div class="col-6">
             <h2 class="text-info"> Category List</h2>
         </div>
-        <div class="col-6 text-right">
+        <div class="col-6 text-end">
             <p>
-                <a asp-action="Create" class="btn btn-info"> <i class="fas fa-plus"></i> &nbsp; Create New</a>
+                <a asp-action="CategoryCreate" asp-controller="ManageMenu" class="btn btn-info">Create New</a>
             </p>
         </div>
     </div>
@@ -42,10 +43,9 @@
                         <td>
                         <td style="width:150px">
                             <div class="btn btn-group" role="group">
-                                <a class="btn btn-primary text-white" asp-action="Edit" asp-route-Id="@category.Id">Edit</a>
-                                <a class="btn btn-success text-white" asp-action="Details" asp-route-Id="@category.Id">Details</a>
-                                    @*<a class="btn btn-danger text-white" asp-action="Delete" asp-route-Id="@Model"><i class="fas fa-trash-alt"></i></a>*@
-                                <button asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger text-white"><i class="fas fa-trash-alt"></i></button>
+                                <a class="btn btn-primary text-white" asp-action="CategoryEdit" asp-route-Id="@category.Id">Edit</a>
+                                <a class="btn btn-success text-white" asp-action="CategoryDetails" asp-route-Id="@category.Id">Details</a>
+                                <button asp-action="CategoryDelete" asp-route-id="@Model" data-message="@deletemessage" onclick="Delete('@Url.Action("CategoryDelete", new { id = @category.Id })',this)" class="btn btn-danger text-white"><i class="fas fa-trash-alt"></i>Delete</button>
                             </div>
                         </td>
                     </tr>
