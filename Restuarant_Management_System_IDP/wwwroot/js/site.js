@@ -18,7 +18,7 @@ function Delete(url, element) {
     }).then((willDelete) => {
         if (willDelete) {
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: url,
                 success: function (data) {
                     if (data.success) {

@@ -117,21 +117,34 @@ namespace Restuarant_Management_System_IDP.Controllers
             return RedirectToAction("Category");
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult CategoryDelete(int? id)
         {
             //test once menu items are added.
-            Category? category = _unitOfWork.Category.Search(id);
+            if(id == null)
+            {
+                return Json(new {success = false, message = "Category not found"});
+            }
+
+            Category? category = _unitOfWork.Category.Get(x => x.Id == id,includeProperties:"MenuItems");
             if(category == null)
             {
                 return Json(new { success = false, message = "Error While Deleting" });
             }
             if (category.MenuItems.Any())
             {
-                return Json(new { success = false, message = "Category contains menu items!" });
+                return Json(new { success = false, message = "Error: Category contains menu items!" });
             }
-            _unitOfWork.Category.Delete(category);
-            _unitOfWork.Save();
+            try
+            {
+                _unitOfWork.Category.Delete(category);
+                _unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+
             return Json(new { success = true, message = "Item deleted successfully." });
         }
 
@@ -300,10 +313,37 @@ namespace Restuarant_Management_System_IDP.Controllers
         }
 
         //not yet implemented
-        [HttpPost]
+        [HttpGet]
         public IActionResult SubCategoryDelete(int? id)
         {
-            return Content("Working on it");
+            if(id == null)
+            {
+                return Json(new { success = false, message = "Item not found" });
+            }
+            
+            SubCategory subCategory = _unitOfWork.SubCategory.Get(x => x.Id == id,includeProperties:"MenuItems");
+
+            if(subCategory == null)
+            {
+                return Json(new { success = false, message = "Item not found" });
+            }
+
+            if (subCategory.MenuItems.Any())
+            {
+                return Json(new { success = false, message = "Error: SubCategory contains Menu Items" });
+            }
+
+            try
+            {
+                _unitOfWork.SubCategory.Delete(subCategory);
+                _unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                return Json(new {success=false, message = "An error occured while deleting"});
+            }
+
+            return Json(new { success = true, message = "Item deleted successfully" });
         }
 
         //get method
@@ -358,22 +398,24 @@ namespace Restuarant_Management_System_IDP.Controllers
                 // files has been uploaded
                 var uploads = Path.Combine(wwwRootPath, "images/MenuItemsImages");  // The images Folder , Location
                 var extension = Path.GetExtension(files[0].FileName);   // use the just first one upload and get it's extension
+                string total_path = Path.Combine(uploads, menuItemFromDb.Id + "_" + menuItemFromDb.Name + extension);
 
-                using (var filesStream = new FileStream(Path.Combine(uploads, menuItemFromDb.Id + "_" + menuItemFromDb.Name + extension), FileMode.Create))
+                using (var filesStream = new FileStream(total_path, FileMode.Create))
                 {
-                    // copy the first file to this location (FileStream) with new name (the id of item)
+                    // copy the first file to this location (FileStream) with new name (the id and name of item)
                     files[0].CopyTo(filesStream);
                 }
 
-                menuItemFromDb.Image = @"\images\MenuItemsImages\" + menuItemFromDb.Id + "_" + menuItemFromDb       .Name + extension;
-                _unitOfWork.Save();
-                return Content("File uploaded");
+                menuItemFromDb.Image = @"\images\MenuItemsImages\" + menuItemFromDb.Id + "_" + menuItemFromDb.Name + extension;
+                //return Content("File uploaded");
             }
-            return Content("workin on it");
-            //return Content(model_details);
-            
+            else
+            {
+                menuItemFromDb.Image = @"\images\" + SD.DefaultFoodImage;
+            }
 
-
+            _unitOfWork.Save();
+            return RedirectToAction("MenuItem");
         }
 
         [HttpGet]
@@ -432,7 +474,7 @@ namespace Restuarant_Management_System_IDP.Controllers
 
             MenuItem menuItemFromDb = _unitOfWork.MenuItem.Search(model.MenuItem.Id);
 
-            //updating overhere
+            //updating properties
             menuItemFromDb.Name = model.MenuItem.Name;
             menuItemFromDb.Description = model.MenuItem.Description;
             menuItemFromDb.Price = model.MenuItem.Price;
@@ -460,15 +502,42 @@ namespace Restuarant_Management_System_IDP.Controllers
                 }
 
                 menuItemFromDb.Image = @"\images\MenuItemsImages\" + menuItemFromDb.Id + "_" + menuItemFromDb.Name + extension;
-                //return Content("File uploaded");
             }
-            
+            //no image? keep the old one...            
            
             //saving!!!
             _unitOfWork.Save();
 
-            return Content("is it working?..");
+            return RedirectToAction("MenuItem");
+            //return Content("is it working?..");
             //return Content(model_details);
+        }
+
+        [HttpGet]
+        public IActionResult MenuItemDelete(int? id)
+        {
+            if(id == null)
+            {
+                return Json(new { success = false, message = "MenuItem Not Found"});
+            }
+
+            MenuItem menuItem = _unitOfWork.MenuItem.Get(x => x.Id == id);
+            if (menuItem == null)
+            {
+                return Json(new { succuess = false, message = "MenuItem not Found" });
+            }
+            try
+            {
+                _unitOfWork.MenuItem.Delete(menuItem);
+                _unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                return Json(new {success = false, message = "An error occured while deleting!!!"});
+            }
+
+            return Json(new { success = true, message = "Item deleted successfully" });
+            
         }
     }
 }

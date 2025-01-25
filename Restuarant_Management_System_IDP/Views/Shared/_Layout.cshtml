@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="~/Restuarant_Management_System_IDP.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css">
+    
+    <!--Checking -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
 </head>
 <body class="search-background fs-5">
@@ -24,40 +27,38 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    @* Add login partial view to display user name*@
-                    @* <partial name="_LoginPartial" /> *@
-                    <ul class="navbar-nav flex-grow-1">
-                        
+                    <ul class="navbar-nav flex-grow-1">   
                         @if (User.IsInRole(SD.Admin)){
-                        @* {  *@
-                        @*     <li class="nav-item dropdown text-white-50">  *@
-                        @*        <a class="nav-link dropdown-toggle" href="#" id="navbarDropDownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  *@
-                        @*           Content Management  *@
-                        @*       </a> *@
-                        @*          <div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink"> *@
-                                    
-                        <li class="nav-item">
-                            <a class="nav-link" asp-action="Category" asp-controller="ManageMenu">Category</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-action="SubCategory" asp-controller="ManageMenu">Sub Category</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-action="MenuItem" asp-controller="ManageMenu">MenuItem</a>
-                        </li>
-                        }
-                        @* <a class="nav-link" asp-action="Index" asp-controller="User">Users</a> *@
 
-                                    @* <li class="nav-item"></li> *@
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="manageMenuDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Manage Menu
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="manageMenuDropdown">
+                                    <a class="dropdown-item" asp-action="Category" asp-controller="ManageMenu">Category</a>
+                                    <a class="dropdown-item" asp-action="SubCategory" asp-controller="ManageMenu">Sub Category</a>
+                                    <a class="dropdown-item" asp-action="MenuItem" asp-controller="ManageMenu">MenuItem</a>
+                                </div>
+                            </li>
 
-                                @* </div> *@
-
+                            @* <li class="nav-item"> *@
+                            @*     <a class="nav-link" asp-action="Category" asp-controller="ManageMenu">Category</a> *@
                             @* </li> *@
-                        @* } *@
+                            @* <li class="nav-item"> *@
+                            @*     <a class="nav-link" asp-action="SubCategory" asp-controller="ManageMenu">Sub Category</a> *@
+                            @* </li> *@
+                            @* <li class="nav-item"> *@
+                            @*     <a class="nav-link" asp-action="MenuItem" asp-controller="ManageMenu">MenuItem</a> *@
+                            @* </li> *@
+                        }
+
                         <li class="nav-item">
                             <a class="nav-link text-white-50" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+
                     </ul>
+
+                    @* Add login partial view to display user name*@
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -82,7 +83,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
-
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
