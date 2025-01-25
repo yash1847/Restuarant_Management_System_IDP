@@ -412,13 +412,63 @@ namespace Restuarant_Management_System_IDP.Controllers
 
             menuItemVM.MenuItem.SubCategory = _unitOfWork.SubCategory.Search(menuItemVM.MenuItem.SubCategoryId);
             return View("MenuItem/Edit",menuItemVM);
-            return Content("Working on it");
         }
 
         [HttpPost]
         public IActionResult MenuItemEdit(MenuItemViewModel model)
         {
-            return Content("Working on it");
+            model.MenuItem.SubCategoryId = int.Parse(Request.Form["SubCategoryId"].ToString());
+            bool menuItemExists = _unitOfWork.MenuItem.Get(m => m.Name == model.MenuItem.Name && m.CategoryId == model.MenuItem.CategoryId && m.SubCategoryId == model.MenuItem.SubCategoryId) != null;
+
+            if (menuItemExists)
+            {
+                model.StatusMessage = "Error: Menu Item with the same name already exists under this category and subcategory, Please use another Name";
+                menuItemVM.StatusMessage = model.StatusMessage;
+                return View("MenuItem/Edit", menuItemVM);
+            }
+
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            var files = Request.Form.Files;
+
+            MenuItem menuItemFromDb = _unitOfWork.MenuItem.Search(model.MenuItem.Id);
+
+            //updating overhere
+            menuItemFromDb.Name = model.MenuItem.Name;
+            menuItemFromDb.Description = model.MenuItem.Description;
+            menuItemFromDb.Price = model.MenuItem.Price;
+            menuItemFromDb.CategoryId = model.MenuItem.CategoryId;
+            menuItemFromDb.SubCategoryId = model.MenuItem.SubCategoryId;
+
+            if (files.Count > 0)
+            {
+                // files has been uploaded
+                var uploads = Path.Combine(wwwRootPath, "images/MenuItemsImages");  // The images Folder , Location
+                var extension = Path.GetExtension(files[0].FileName);   // use the just first one upload and get it's extension
+
+                //delete the old image
+                var imagePath = Path.Combine(wwwRootPath, menuItemFromDb.Image.TrimStart('\\'));
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+
+                using (var filesStream = new FileStream(Path.Combine(uploads, menuItemFromDb.Id + "_" + menuItemFromDb.Name + extension), FileMode.Create))
+                {
+                    // copy the first file to this location (FileStream) with new name (the id of item)
+                    files[0].CopyTo(filesStream);
+                }
+
+                menuItemFromDb.Image = @"\images\MenuItemsImages\" + menuItemFromDb.Id + "_" + menuItemFromDb.Name + extension;
+                //return Content("File uploaded");
+            }
+            
+           
+            //saving!!!
+            _unitOfWork.Save();
+
+            return Content("is it working?..");
+            //return Content(model_details);
         }
     }
 }
