@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Restuarant_Management_System_IDP.Models
@@ -26,7 +27,10 @@ namespace Restuarant_Management_System_IDP.Models
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
 
+        [JsonIgnore]
         public virtual Category Category { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<MenuItem> MenuItems { get; set; }
     }
 }

@@ -10,7 +10,6 @@ namespace Restuarant_Management_System_IDP.Controllers
         public IActionResult Dashboard()
         {
             return Content("Admin Dashboard");
-            return View();
         }
         public IActionResult Profile()
         {

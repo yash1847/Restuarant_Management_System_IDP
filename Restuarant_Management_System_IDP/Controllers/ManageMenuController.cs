@@ -16,9 +16,32 @@ namespace Restuarant_Management_System_IDP.Controllers
     public class ManageMenuController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ManageMenuController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        [BindProperty]
+        private MenuItemViewModel menuItemVM { get; set; }
+
+        [BindProperty]
+        private SubCategoryAndCategoryViewModel subCategoryAndCategoryVM { get; set; }
+        public ManageMenuController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
+
+            subCategoryAndCategoryVM = new SubCategoryAndCategoryViewModel()
+            {
+                CategoryList = _unitOfWork.Category.GetAll().Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name }),
+                SubCategory = new SubCategory()
+            };
+
+            menuItemVM = new MenuItemViewModel()
+            {
+                CategoryList = subCategoryAndCategoryVM.CategoryList,
+                MenuItem = new MenuItem(),
+            };
+
+
+
         }
 
         //[Route("Category")]
@@ -97,6 +120,7 @@ namespace Restuarant_Management_System_IDP.Controllers
         [HttpPost]
         public IActionResult CategoryDelete(int? id)
         {
+            //test once menu items are added.
             Category? category = _unitOfWork.Category.Search(id);
             if(category == null)
             {
@@ -123,7 +147,7 @@ namespace Restuarant_Management_System_IDP.Controllers
         {
             string? searchQuery = (string?)frm["searchQuery"];
             string? searchType = (string?)frm["searchType"];
-            string buttonPressed = (string)frm["button"];
+            string? buttonPressed = (string?)frm["button"];
 
             //Console.WriteLine(frm.ToString());
             System.Diagnostics.Debug.WriteLine(frm.ToString());
@@ -163,38 +187,36 @@ namespace Restuarant_Management_System_IDP.Controllers
 
         public IActionResult SubCategoryCreate()
         {
-            List<Category> categories = _unitOfWork.Category.GetAll();
-            SubCategoryAndCategoryViewModel model = new SubCategoryAndCategoryViewModel()
-            {
-                CategoryList = categories.Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name}),
-                SubCategory = new SubCategory(),
-            };
-            return View("SubCategory/Create",model);
+            //List<Category> categories = _unitOfWork.Category.GetAll();
+            //SubCategoryAndCategoryViewModel model = new SubCategoryAndCategoryViewModel()
+            //{
+            //    CategoryList = categories.Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name}),
+            //    SubCategory = new SubCategory(),
+            //};
+            return View("SubCategory/Create",subCategoryAndCategoryVM);
         }
         
         [HttpPost]
         public IActionResult SubCategoryCreate(SubCategoryAndCategoryViewModel model)
         {
-            //ModelState.Remove("StatusMessage");
-            //ModelState.Remove("SubCategory.Category");
-            //ModelState.Remove("CategoryList");
-            //if (ModelState.IsValid)
-            //{
-                bool subcategoryExists = _unitOfWork.SubCategory.GetAll().Where(s => s.CategoryId == model.SubCategory.CategoryId && s.Name == model.SubCategory.Name).Any();
-                if (subcategoryExists)
-                {
-                    model.StatusMessage = "Error: Sub Category with the same already exists under this category, Please use another Name";
-                }
-                else
-                {
-                    //model.SubCategory.Category = _unitOfWork.Category.Search(model.SubCategory.CategoryId);
-                    _unitOfWork.SubCategory.Add(model.SubCategory);    
-                    _unitOfWork.Save();
-                    return RedirectToAction("SubCategory");
-                }
-            //}
-            return View("SubCategory/Create", model);
 
+            //bool subcategoryExists = _unitOfWork.SubCategory.GetAll().Where(s => s.CategoryId == model.SubCategory.CategoryId && s.Name == model.SubCategory.Name).Any();
+            bool subcategoryExists = _unitOfWork.SubCategory.Get(s => s.CategoryId == model.SubCategory.CategoryId && s.Name == model.SubCategory.Name) != null;
+            if (subcategoryExists)
+            {
+                model.StatusMessage = "Error: Sub Category with the same already exists under this category, Please use another Name";
+                
+                subCategoryAndCategoryVM.SubCategory = model.SubCategory;
+                subCategoryAndCategoryVM.StatusMessage = model.StatusMessage;
+
+                return View("SubCategory/Create", subCategoryAndCategoryVM);
+            }
+            else
+            {
+                _unitOfWork.SubCategory.Add(model.SubCategory);    
+                _unitOfWork.Save();
+                return RedirectToAction("SubCategory");
+            }
         }
 
         [HttpGet]
@@ -222,8 +244,181 @@ namespace Restuarant_Management_System_IDP.Controllers
             {
                 return NotFound();
             }
-
+            //also show the menu items in here
             return View("SubCategory/Details",subcategory);
+        }
+
+        [HttpGet]
+        public IActionResult SubCategoryEdit(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+            SubCategory subcategory = _unitOfWork.SubCategory.Get(s => s.Id == id);
+            if (subcategory == null)
+            {
+                return NotFound();
+            }
+            List<Category> categories = _unitOfWork.Category.GetAll();
+            SubCategoryAndCategoryViewModel model = new SubCategoryAndCategoryViewModel()
+            {
+                CategoryList = categories.Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name }),
+                SubCategory = subcategory,
+            };
+            
+            return View("SubCategory/Edit", model);
+        }
+
+        [HttpPost]
+        public IActionResult SubCategoryEdit(SubCategoryAndCategoryViewModel model)
+        {
+            //bool subcategoryExists = _unitOfWork.SubCategory.GetAll().Where(s => s.CategoryId == model.SubCategory.CategoryId && s.Name == model.SubCategory.Name).Any();
+            bool subcategoryExists = _unitOfWork.SubCategory.Get(s => s.CategoryId == model.SubCategory.CategoryId && s.Name == model.SubCategory.Name) != null;
+            if (subcategoryExists)
+            {
+                model.StatusMessage = "Error: Sub Category with the same already exists under this category, Please use another Name";
+            }
+            else
+            {
+                //model.SubCategory.Category = _unitOfWork.Category.Search(model.SubCategory.CategoryId);
+                _unitOfWork.SubCategory.Update(model.SubCategory);
+                _unitOfWork.Save();
+                return RedirectToAction("SubCategory");
+            }
+
+            //List<Category> categories = _unitOfWork.Category.GetAll();
+            //SubCategoryAndCategoryViewModel modelVM = new SubCategoryAndCategoryViewModel()
+            //{
+            //    CategoryList = categories.Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name }),
+            //    SubCategory = model.SubCategory,
+            //    StatusMessage = model.StatusMessage
+            //};
+            subCategoryAndCategoryVM.SubCategory = model.SubCategory;
+            subCategoryAndCategoryVM.StatusMessage = model.StatusMessage;
+            return View("SubCategory/Edit", subCategoryAndCategoryVM);
+        }
+
+        //not yet implemented
+        [HttpPost]
+        public IActionResult SubCategoryDelete(int? id)
+        {
+            return Content("Working on it");
+        }
+
+        //get method
+        //index property
+        public IActionResult MenuItem()
+        {
+            //display all menu items
+            //var menuitems = _unitOfWork.MenuItem.GetAll(includeProperties: "Category,SubCategory");
+            bool menuItemsExist = _unitOfWork.MenuItem.GetAll().Any();
+            ViewBag.count = menuItemsExist ? true : false;
+            return View("MenuItem/Index");
+        }
+
+        [HttpGet]
+        public IActionResult GetMenuItems()
+        {
+            var menuItems = _unitOfWork.MenuItem.GetAll(includeProperties: "Category,SubCategory").ToList();
+            return Json(new { data = menuItems });
+        }
+
+        [HttpGet]
+        public IActionResult MenuItemCreate()
+        {
+            return View("MenuItem/Create", menuItemVM);
+        }
+
+        [HttpPost]
+        public IActionResult MenuItemCreate(MenuItemViewModel model)
+        {
+
+            model.MenuItem.SubCategoryId = int.Parse(Request.Form["SubCategoryId"].ToString());
+            bool menuItemExists = _unitOfWork.MenuItem.Get(x => x.Name == model.MenuItem.Name && x.CategoryId == model.MenuItem.CategoryId && x.SubCategoryId == model.MenuItem.SubCategoryId) != null;
+            //menuItemExists = true;
+            if (menuItemExists)
+            {
+                model.StatusMessage = "Error: Menu Item with the same name already exists under this category and subcategory, Please use another Name";
+                menuItemVM.StatusMessage = model.StatusMessage;
+                return View("MenuItem/Create", menuItemVM);
+            }
+
+            //model.MenuItem.SubCategory = _unitOfWork.SubCategory.Search(model.MenuItem.SubCategoryId);
+
+            _unitOfWork.MenuItem.Add(model.MenuItem);
+            _unitOfWork.Save();
+
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            MenuItem menuItemFromDb = _unitOfWork.MenuItem.Search(model.MenuItem.Id);
+
+            var files = Request.Form.Files;
+            if (files.Count > 0)
+            {
+                // files has been uploaded
+                var uploads = Path.Combine(wwwRootPath, "images/MenuItemsImages");  // The images Folder , Location
+                var extension = Path.GetExtension(files[0].FileName);   // use the just first one upload and get it's extension
+
+                using (var filesStream = new FileStream(Path.Combine(uploads, menuItemFromDb.Id + "_" + menuItemFromDb.Name + extension), FileMode.Create))
+                {
+                    // copy the first file to this location (FileStream) with new name (the id of item)
+                    files[0].CopyTo(filesStream);
+                }
+
+                menuItemFromDb.Image = @"\images\MenuItemsImages\" + menuItemFromDb.Id + "_" + menuItemFromDb       .Name + extension;
+                _unitOfWork.Save();
+                return Content("File uploaded");
+            }
+            return Content("workin on it");
+            //return Content(model_details);
+            
+
+
+        }
+
+        [HttpGet]
+        public IActionResult MenuItemDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            menuItemVM.MenuItem = _unitOfWork.MenuItem.Search(id);
+
+            if (menuItemVM.MenuItem == null)
+            {
+                return NotFound();
+            }
+
+            //why is sub category not being referenced ?
+            menuItemVM.MenuItem.SubCategory = _unitOfWork.SubCategory.Search(menuItemVM.MenuItem.SubCategoryId);
+
+            return View("MenuItem/Details", menuItemVM);
+        }
+
+        [HttpGet]
+        public IActionResult MenuItemEdit(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+            menuItemVM.MenuItem = _unitOfWork.MenuItem.Search(id);
+            
+            if(menuItemVM.MenuItem == null)
+            {
+                return NotFound();
+            }
+
+            menuItemVM.MenuItem.SubCategory = _unitOfWork.SubCategory.Search(menuItemVM.MenuItem.SubCategoryId);
+            return View("MenuItem/Edit",menuItemVM);
+            return Content("Working on it");
+        }
+
+        [HttpPost]
+        public IActionResult MenuItemEdit(MenuItemViewModel model)
+        {
+            return Content("Working on it");
         }
     }
 }

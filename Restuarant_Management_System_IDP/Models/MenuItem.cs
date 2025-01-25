@@ -26,7 +26,7 @@ namespace Restuarant_Management_System_IDP.Models
         public int SubCategoryId { get; set; } 
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = " Price should be greater than ${1}")]
+        [Range(1, int.MaxValue, ErrorMessage = " Price should be greater than {1}₹")]
         public double Price { get; set; }
 
         public virtual Category Category { get; set; } //navigational property

@@ -1,0 +1,89 @@
+﻿@model MenuItemViewModel
+
+@{
+    ViewData["Title"] = Model.MenuItem.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-info">@Model.MenuItem.Name</h2>
+<br />
+
+
+<div class="border backgroundWhite row">
+
+    <div class="col-8">
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="MenuItem.Name" class="col-form-label"></label>
+            </div>
+            <div class="col-8">
+                <input asp-for="MenuItem.Name" disabled class="form-control" />
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="MenuItem.Description" class="col-form-label"></label>
+            </div>
+            <div class="col-8">
+                @* @Html.TextAreaFor(x => x.MenuItem.Description) *@
+                <textarea asp-for="MenuItem.Description" disabled class="form-control" rows="4"></textarea>
+
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="MenuItem.Price" class="col-form-label"></label>
+            </div>
+            <div class="col-8">
+                <input asp-for="MenuItem.Price" readonly class="form-control" />
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="MenuItem.CategoryId" class="col-form-label"></label>
+            </div>
+            <div class="col-8">
+                <input asp-for="MenuItem.Category.Name" readonly class="form-control" />
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="MenuItem.SubCategoryId" class="col-form-label"></label>
+            </div>
+            <div class="col-8">
+                <input asp-for="MenuItem.SubCategory.Name" readonly class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    @* <br /> <br /> *@
+    <div class="col-3 offset-1">
+        <img src="@Model.MenuItem.Image" width="100%" style="border-radius:5px;border:1px solid #bbb9b9;" />
+    </div>
+
+    <div class="col-8">
+        <div class="col-8 offset-4">
+            <br />
+            <div class="row">
+                <div class="col-6">
+                    <a asp-action="MenuItemEdit" asp-route-id="@Model.MenuItem.Id" class="btn btn-info form-control">Edit</a>
+                </div>
+                <div class="col-6">
+                    <a asp-action="MenuItem" class="btn btn-success form-control">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\ManageMenu\MenuItem\" />
+    <Folder Include="wwwroot\images\MenuItemsImages\" />
   </ItemGroup>
 
 </Project>

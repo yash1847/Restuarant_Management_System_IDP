@@ -7,5 +7,9 @@
         public const string Kitchen = "KitchenUser";
         public const string FrontDesk = "FrontDeskUser";
         public const string Customer = "Customer";
+
+        //default image
+        public const string DefaultFoodImage = "defaultFoodImage.png";
+
     }
 }

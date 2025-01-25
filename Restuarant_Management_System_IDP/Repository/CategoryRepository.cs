@@ -16,10 +16,5 @@ namespace Restuarant_Management_System_IDP.Repository
         {
             _db.Categories.Update(obj);
         }
-
-        //public virtual void Delete(Category obj)
-        //{
-            
-        //}
     }
 }

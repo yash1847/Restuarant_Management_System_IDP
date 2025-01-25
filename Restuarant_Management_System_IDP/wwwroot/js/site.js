@@ -6,6 +6,9 @@
 // Confirm Delete Button
 function Delete(url, element) {
     var message = $(element).data("message");
+    if (!message) {
+        message = "Once deleted, you will not be able to recover";
+    }
     swal({
         title: "Are you sure?",
         text: message,
