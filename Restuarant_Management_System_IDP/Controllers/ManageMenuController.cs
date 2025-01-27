@@ -36,7 +36,7 @@ namespace Restuarant_Management_System_IDP.Controllers
 
             menuItemVM = new MenuItemViewModel()
             {
-                CategoryList = subCategoryAndCategoryVM.CategoryList,
+                CategoryList = subCategoryAndCategoryVM.CategoryList.ToList(),
                 MenuItem = new MenuItem(),
             };
 

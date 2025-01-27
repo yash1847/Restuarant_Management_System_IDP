@@ -1,10 +1,31 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model IndexViewModel
 
 <div class="text-center">
     <br />
     <h1>Welcome to Food Bytes</h1>
-    @* <p>Lean about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
-    @* <h1>Food Bytes Restaurant</h1> *@
+</div>
+
+<h1>Restaurant Menu</h1>
+<br />
+<br />
+
+@* categories page with the image of the first menuitem in the category *@
+
+<div class="border backgroundWhite">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info">Categories</h2>
+        </div>
+    </div>
+    @foreach (var category in Model.Categories)
+    {
+        <div class="row" id="menu-wrapper">
+            @if(category.MenuItems.Any()){
+
+            }
+        </div>
+    }   
 </div>

@@ -1,0 +1,188 @@
+﻿@model MenuViewModel
+@{
+    ViewData["Title"] = "Menu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    // List<SelectListItem> = 
+}
+
+<h1>Food Byte's Menu</h1>
+
+<br />
+<br />
+<div class="border backgroundWhite">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info">Menu Items</h2>
+        </div>
+    </div>
+    <br />
+    <form id="searchForm" asp-action="">
+        <div class="row form-group mb-3">
+            <div class="col-10 pr-0">
+                <input type="text" class="form-control" id="searchQuery" name="searchQuery" placeholder="Search Menu" />
+            </div>
+            <div class="col-2 pl-0">
+                <button type="submit" class="btn btn-success w-100"><i class="bi bi-search"></i></button>
+            </div>
+        </div>
+        <div class="row form-group mb-3">
+            <div class="col-6">
+                <label for="CategoryList">Filter by Categories: </label>
+                <select id="ddlCategoryList" name="CategoryList" asp-items="Model.categorySelectList" class="form-select form-control"></select>
+            </div>
+            <div id ="subCategorylist" class="col-6">
+                <label for="SubCategoryList">Filter by SubCategories: </label>
+                <select id="ddlSubCategoryList" name="SubCategoryList" asp-items="@(new SelectList(string.Empty,"Id","Name"))" class="form-select form-control"></select>
+            </div>
+        </div>
+    </form>
+    @foreach(var category in Model.CategoryList){
+        <div class="col-12 @category.Name.Replace(" ",string.Empty) menu-category">
+        <div class="row">
+            <h3 class="text-success">@category.Name</h3>
+        </div>
+            @foreach(var subcategory in category.SubCategories){
+                <div class="col-11 @subcategory.Name.Replace(" ",string.Empty) @category.Name.Replace(" ",string.Empty) menu-subcategory">
+                    <div class="row">
+                        <h3 class="text-info">@subcategory.Name</h3>
+                    </div>
+                    @foreach(var menuItem in category.MenuItems.Where(x => x.SubCategoryId == subcategory.Id)){
+                        <div>@menuItem.Name</div>
+                    }
+                 </div>
+            }
+            
+        </div>
+    }
+</div>
+
+
+@section Scripts{
+    <script>
+        var subCategoryDict = @Html.Raw(Json.Serialize(Model.SubCategoryDict));
+    </script>
+
+    <script type="text/javascript">
+        
+        $(document).ready(function () {
+
+            //hide the subcategory dropdown on ready
+            // $("#subCategorylist").css("display","none");
+            $("#subCategorylist").hide();
+            // console.log(categoryList);
+            // console.log(subCategoryList);
+
+            $("#ddlCategoryList").change(function(){
+
+                var selectedCategoryid = $("#ddlCategoryList").val();
+                var selectedCategorytext =  '.' + $("#ddlCategoryList option:selected").text();
+                filterByCategory(selectedCategoryid,selectedCategorytext);
+
+            });
+
+            $("#ddlSubCategoryList").change(function(){
+
+                //category
+                var selectedCategoryid = $("#ddlCategoryList").val();
+                var selectedCategorytext =  '.' + $("#ddlCategoryList option:selected").text();
+
+                //sub category
+                var selectedSubCategoryid = $("#ddlSubCategoryList").val();
+                var selectedSubCategorytext = '.' + $("#ddlSubCategoryList option:selected").text();
+                
+                if(selectedCategoryid != "showall"){
+
+                    filterBySubCategory(selectedCategorytext,selectedSubCategoryid,selectedSubCategorytext);
+                
+                }
+                // else do nothing
+
+            });
+
+        });
+
+        function filterByCategory(selectedCategoryid,selectedCategorytext){
+
+            $('.menu-subcategory').show();
+
+            // var selectedCategoryid = $("#ddlCategoryList").val();
+            // var selectedCategorytext =  '.';
+            // selectedCategorytext += $("#ddlCategoryList option:selected").text();
+
+            // console.log(selectedCategorytext);
+            // console.log(selectedCategoryid);
+
+            if(selectedCategoryid != "showall"){
+
+                $(".menu-category").fadeOut();
+
+                $("#subCategorylist").show();
+                // console.log(selectedCategory);
+                getSubCategory(selectedCategoryid);
+
+                setTimeout(function () {
+                    $(selectedCategorytext).slideDown();
+                }, 300);
+            }
+            else{
+
+                //hide the subcategory filter
+                $("#subCategorylist").hide();
+
+                //empty the filter and add just show all option
+                $("#ddlSubCategoryList").empty();
+                $("#ddlSubCategoryList").html("<option value='showall'>Show All</option>");
+
+                //show all menu-items
+                setTimeout(function() {
+                    $(".menu-category").slideDown();
+                }, 300);
+            }
+
+        }
+
+        function filterBySubCategory(selectedCategorytext,selectedSubCategoryid,selectedSubCategorytext){
+
+            // console.log("Selected Category text",selectedCategorytext);
+            // console.log("Selected subcategory text",selectedSubCategorytext);
+            // console.log("Selecte subcategory value",selectedSubCategoryid);
+            var allsubCategories = selectedCategorytext + '.menu-subcategory';
+
+            
+            if(selectedSubCategoryid == "showall"){
+
+                setTimeout(function() {
+                        $(allsubCategories).slideDown();
+                }, 300);
+                // console.log('is it working');
+
+            }
+            else{
+
+                $(allsubCategories).fadeOut();
+                var selectedSubCategoryclass = selectedCategorytext + selectedSubCategorytext;
+                setTimeout(function(){
+                    $(selectedSubCategoryclass).slideDown();
+                }, 300);
+                // console.log(selectedSubCategoryclass);
+            }
+
+
+        }
+
+        function getSubCategory(selectedCategoryid){
+            // console.log('Inside fxn');
+
+            var items = "<option value='showall'>Show All</option>";
+            $("#ddlSubCategoryList").empty();
+
+
+            $.each(subCategoryDict[selectedCategoryid], function(i, subCategory){
+                // console.log(subCategory);
+                items += "<option value='" + subCategory.value + "'>" + subCategory.text + "</option>";
+            });
+            // console.log(items);
+            $("#ddlSubCategoryList").html(items);
+        }
+    </script>
+}

@@ -74,6 +74,7 @@ namespace Restuarant_Management_System_IDP.Repository
             return query.ToList();
         }
 
+
         public T? Search(object id)
         {
             return dbSet.Find(id);
