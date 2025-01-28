@@ -393,22 +393,16 @@ namespace Restuarant_Management_System_IDP.Migrations
 
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.ShoppingCart", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("MenuItemId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ApplicationUserID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.HasKey("Id", "MenuItemId");
-
-                    b.HasIndex("ApplicationUserID");
+                    b.HasKey("ApplicationUserId", "MenuItemId");
 
                     b.HasIndex("MenuItemId");
 
@@ -607,8 +601,8 @@ namespace Restuarant_Management_System_IDP.Migrations
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.ShoppingCart", b =>
                 {
                     b.HasOne("Restuarant_Management_System_IDP.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("ShoppingCarts")
-                        .HasForeignKey("ApplicationUserID")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -639,8 +633,6 @@ namespace Restuarant_Management_System_IDP.Migrations
                     b.Navigation("Addresstbs");
 
                     b.Navigation("OrderHeaders");
-
-                    b.Navigation("ShoppingCarts");
                 });
 
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.Category", b =>

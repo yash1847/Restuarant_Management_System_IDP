@@ -14,17 +14,16 @@ namespace Restuarant_Management_System_IDP.Migrations
                 name: "ShoppingCart",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MenuItemId = table.Column<int>(type: "int", nullable: false),
-                    ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Count = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShoppingCart", x => new { x.Id, x.MenuItemId });
+                    table.PrimaryKey("PK_ShoppingCart", x => new { x.ApplicationUserId, x.MenuItemId });
                     table.ForeignKey(
-                        name: "FK_ShoppingCart_AspNetUsers_ApplicationUserID",
-                        column: x => x.ApplicationUserID,
+                        name: "FK_ShoppingCart_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -35,11 +34,6 @@ namespace Restuarant_Management_System_IDP.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShoppingCart_ApplicationUserID",
-                table: "ShoppingCart",
-                column: "ApplicationUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingCart_MenuItemId",

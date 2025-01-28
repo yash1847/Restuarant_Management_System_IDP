@@ -14,12 +14,12 @@ namespace Restuarant_Management_System_IDP.Models
             Count = 1;
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
+        //[DatabaseGenerated(DatabaseGeneratedOption.None)]
+        //public int Id { get; set; }
 
         [Required]
         [ForeignKey("ApplicationUser")]
-        public string ApplicationUserID { get; set; }
+        public string ApplicationUserId { get; set; }
 
         [Required]
         [ForeignKey("MenuItem")]

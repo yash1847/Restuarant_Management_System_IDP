@@ -15,7 +15,7 @@ namespace Restuarant_Management_System_IDP.Repository
 
         public void Update(ShoppingCart obj)
         {
-            throw new NotImplementedException();
+            _db.ShoppingCart.Update(obj);
         }
     }
 }

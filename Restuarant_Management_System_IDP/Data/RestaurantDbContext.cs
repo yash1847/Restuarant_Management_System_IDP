@@ -21,7 +21,9 @@ namespace Restuarant_Management_System_IDP.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<ShoppingCart>().HasKey(x => new { x.Id, x.MenuItemId });
+            //modelBuilder.Entity<ShoppingCart>().HasKey(x => new { x.Id, x.MenuItemId });
+
+            modelBuilder.Entity<ShoppingCart>().HasKey(x => new { x.ApplicationUserId, x.MenuItemId });
 
             modelBuilder.Entity<Usertb>().HasData(new Usertb
             {
