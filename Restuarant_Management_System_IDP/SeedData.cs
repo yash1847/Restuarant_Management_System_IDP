@@ -26,9 +26,9 @@ namespace Restuarant_Management_System_IDP
                 {
                     await roleManager.CreateAsync(new IdentityRole(SD.Kitchen));
                 }
-                if (!await roleManager.RoleExistsAsync(SD.FrontDesk))
+                if (!await roleManager.RoleExistsAsync(SD.Delivery))
                 {
-                    await roleManager.CreateAsync(new IdentityRole(SD.FrontDesk));
+                    await roleManager.CreateAsync(new IdentityRole(SD.Delivery));
                 }
 
                 // Check and create admin

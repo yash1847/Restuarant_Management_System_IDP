@@ -7,6 +7,7 @@ using Restuarant_Management_System_IDP.Data;
 using Restuarant_Management_System_IDP;
 using Restuarant_Management_System_IDP.Models;
 using Microsoft.Extensions.DependencyInjection;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +16,13 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 //Adding Dbcontext 
 //string conString = builder.Configuration.GetConnectionString("sqlcon");
-builder.Services.AddDbContext<RestaurantDbContext>(options => 
+//builder.Services.AddDbContext<RestaurantDbContext>(options => 
+//        options.UseSqlServer(builder.Configuration.GetConnectionString("sqlcon"))
+//);
+
+builder.Services.AddDbContext<RestaurantDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("sqlcon"))
-);
+               .EnableSensitiveDataLogging());
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                     {

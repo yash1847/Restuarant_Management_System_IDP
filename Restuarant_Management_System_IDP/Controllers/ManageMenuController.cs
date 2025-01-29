@@ -95,7 +95,7 @@ namespace Restuarant_Management_System_IDP.Controllers
             {
                 return NotFound();
             }
-            Category? category = _unitOfWork.Category.Search(id);
+            Category? category = _unitOfWork.Category.Get(x => x.Id == id,tracked:false);
             if (category == null)
             {
                 return NotFound();
@@ -109,10 +109,23 @@ namespace Restuarant_Management_System_IDP.Controllers
             if (!ModelState.IsValid)
             {
                 //add model error
-                return View("Category/Edit");
+                return View("Category/Edit",category);
             }
+
             //check if category name already exists
-            _unitOfWork.Category.Update(category);
+            bool categoryNameExists = _unitOfWork.Category.Get(c => c.Id != category.Id && c.Name == category.Name) != null;
+
+            if (categoryNameExists)
+            {
+                ModelState.AddModelError(string.Empty, "Category Name already exists");
+                return View("Category/Edit", category);
+            }
+            
+            Category categoryFromdB = _unitOfWork.Category.Get(c => c.Id == category.Id,tracked:true);
+
+            //_unitOfWork.Category.Update(category);
+            categoryFromdB.Name = category.Name;
+            //_unitOfWork.Category.Update(categoryFromdB);
             _unitOfWork.Save();
             return RedirectToAction("Category");
         }
@@ -126,7 +139,7 @@ namespace Restuarant_Management_System_IDP.Controllers
                 return Json(new {success = false, message = "Category not found"});
             }
 
-            Category? category = _unitOfWork.Category.Get(x => x.Id == id,includeProperties:"MenuItems");
+            Category? category = _unitOfWork.Category.Get(x => x.Id == id,includeProperties:"MenuItems",tracked:true);
             if(category == null)
             {
                 return Json(new { success = false, message = "Error While Deleting" });
@@ -460,7 +473,7 @@ namespace Restuarant_Management_System_IDP.Controllers
         public IActionResult MenuItemEdit(MenuItemViewModel model)
         {
             model.MenuItem.SubCategoryId = int.Parse(Request.Form["SubCategoryId"].ToString());
-            bool menuItemExists = _unitOfWork.MenuItem.Get(m => m.Name == model.MenuItem.Name && m.CategoryId == model.MenuItem.CategoryId && m.SubCategoryId == model.MenuItem.SubCategoryId) != null;
+            bool menuItemExists = _unitOfWork.MenuItem.Get(m => m.Name == model.MenuItem.Name && m.Id != model.MenuItem.Id && m.CategoryId == model.MenuItem.CategoryId && m.SubCategoryId == model.MenuItem.SubCategoryId) != null;
 
             if (menuItemExists)
             {

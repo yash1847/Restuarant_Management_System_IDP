@@ -1,0 +1,170 @@
+﻿@model List<OrderDetailViewModel>
+
+@{
+    ViewData["Title"] = "Order History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<br />
+<div class="border backgroundWhite">
+
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info"> Order List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <a asp-controller="Home" asp-action="Menu" class="btn btn-outline-info">Continue Browsing</a>
+        </div>
+    </div>
+    <br />
+    <div>
+        @if (Model.Count() > 0)
+        {
+            <table class="table table-striped border">
+                <tr class="table-secondary">
+                    <th>
+                        @Html.DisplayNameFor(m => m[0].OrderHeader.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(m => m[0].OrderHeader.PickupName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(m => m[0].OrderHeader.OrderDate)
+                    </th>
+                    <th>
+                        @* @Html.DisplayNameFor(m => m[0].OrderHeader.DeliveryTime) *@
+                        Delivery Time
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(m => m[0].OrderHeader.OrderTotal)
+                    </th>
+                    <th>
+                        Order Details
+                    </th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => item.OrderHeader.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.OrderHeader.PickupName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.OrderHeader.OrderDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.OrderHeader.DeliveryTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.OrderHeader.OrderTotal)
+                        </td>
+                        <td>
+                          
+                            <a asp-action="OrderDetails" asp-controller="Order" asp-route-id="@item.OrderHeader.Id" class="btn btn-success"><i class="bi bi-card-list"></i> Details</a>
+                            @* @if (item.OrderHeader.Status == SD.StatusSubmitted || item.OrderHeader.Status == SD.StatusInProcess || item.OrderHeader.Status == SD.StatusCompleted || item.OrderHeader.Status == SD.StatusReady)
+                            {
+                                <a asp-action="" asp-controller="" asp-route-id="@item.OrderHeader.Id" class="btn btn-info"><i class="bi bi-clock"></i> Status</a>    
+                            } *@
+                        </td>
+                    </tr>
+                }
+            </table>
+            <br />
+        }
+        else
+        {
+            <p> No Orders exists , you don't make order yet....</p>
+            <a  asp-controller="Home" asp-action="Index" class="btn btn-outline-info">Make order</a>
+        }
+
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-light justify-content-center">
+                <h5 class="modal-title">Order Details</h5>
+            </div>
+            <div class="modal-body justify-content-center" id="myModalContent">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" style="width:20%" data-dismiss="modal">Close <i class="fas fa-times"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myStatusModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-light justify-content-center">
+                <h5 class="modal-title">Order Status</h5>
+            </div>
+            <div class="modal-body justify-content-center" id="myStatusModalContent">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" style="width:20%" data-dismiss="modal">Close <i class="fas fa-times"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var OrderDetailsUrl = '/Order/GetOrderDetails';
+        var OrderStatusURL = '/Order/GetOrderStatus';
+
+        $(function () {
+            $(".anchorDetail").click(function () {
+                // to get data-id
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+
+                $.ajax({
+                    type: "GET",
+                    url: OrderDetailsUrl,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "Id": id },
+                    cache: false,
+                    datatyype: "json",
+                    success: function (data) {
+                        // pass this returning data to this div
+                        $('#myModalContent').html(data);
+                        $('#myModal').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed");
+                    }
+                });
+            });
+
+            $(".btnStatus").click(function () {
+                // to get data-id
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+
+                $.ajax({
+                    type: "GET",
+                    url: OrderStatusURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "Id": id },
+                    cache: false,
+                    datatyype: "json",
+                    success: function (data) {
+                        // pass this returning data to this div
+                        $('#myStatusModalContent').html(data);
+                        $('#myStatusModal').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed");
+                    }
+                });
+            });
+        });
+    </script>
+}

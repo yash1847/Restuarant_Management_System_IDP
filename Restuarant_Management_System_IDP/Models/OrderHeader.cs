@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,6 +17,9 @@ namespace Restuarant_Management_System_IDP.Models
         [ForeignKey("ApplicationUser")]
         public string UserId { get; set; }
 
+        [Required]
+        public string PickupName { get; set; }
+
 
         [Required]
         [DataType(DataType.Date)]
@@ -25,27 +29,35 @@ namespace Restuarant_Management_System_IDP.Models
         [Display(Name = "Order Total")]
         public double OrderTotal { get; set; }
 
-        [Required]
         [Display(Name = "Pickup Time")]
         [DataType(DataType.Time)]
-        public DateTime PickUpTime { get; set; }
-
-        [Required]
-        [Display(Name = "Pickup Date")]
-        [DataType(DataType.Date)]
-        public DateTime PickUpDate { get; set; }
+        public DateTime DeliveryTime { get; set; }
 
         public string Status { get; set; }
         public string PaymentStatus { get; set; }
 
-        //public string Comments { get; set; }
+        //can get from addresstb but if the user changes address in future, it will not affect the order history
 
-        //[Display(Name = "Phone Number")]
-        //public string PhoneNumber { get; set; }
+        [Required]
+        public string DeliverAddress { get; set; }
+
+        [Required]
+        public string DeliverCity { get; set; }
+
+        [Required]
+        public string DeliverPinCode { get; set; }
+
+        //[ValidateNever]
+        //[Required]
+        //[ForeignKey("Addresstb")]
+        //public int DeliveryAddressId { get; set; }
 
         //public string TransactionId { get; set; } //payment
 
+        [ValidateNever]
         public virtual ApplicationUser ApplicationUser { get; set; }
 
+        //[ValidateNever]
+        //public virtual Addresstb Addresstb { get; set; }
     }
 }

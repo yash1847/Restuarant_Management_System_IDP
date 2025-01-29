@@ -22,7 +22,11 @@ namespace Restuarant_Management_System_IDP.Models
 
         [Required]
         public int Count { get; set; } //unique menu items
-        public string? Description { get; set; }
+
+        //can get from menuItem but if the admin changes the price or name in future, it will not affect the order history
+
+        public string Name { get; set; }
+        public string Description { get; set; }
 
         [Required]
         public double Price { get; set; }

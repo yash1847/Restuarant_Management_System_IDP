@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Restuarant_Management_System_IDP.Data;
 
@@ -11,9 +12,11 @@ using Restuarant_Management_System_IDP.Data;
 namespace Restuarant_Management_System_IDP.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    partial class RestaurantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250128095106_addedPickupname")]
+    partial class addedPickupname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -328,15 +331,10 @@ namespace Restuarant_Management_System_IDP.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MenuItemId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -361,17 +359,8 @@ namespace Restuarant_Management_System_IDP.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DeliverAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeliverCity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeliverPinCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DeliveryAddressId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DeliveryTime")
                         .HasColumnType("datetime2");
@@ -399,6 +388,8 @@ namespace Restuarant_Management_System_IDP.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DeliveryAddressId");
 
                     b.HasIndex("UserId");
 
@@ -603,11 +594,19 @@ namespace Restuarant_Management_System_IDP.Migrations
 
             modelBuilder.Entity("Restuarant_Management_System_IDP.Models.OrderHeader", b =>
                 {
+                    b.HasOne("Restuarant_Management_System_IDP.Models.Addresstb", "Addresstb")
+                        .WithMany()
+                        .HasForeignKey("DeliveryAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Restuarant_Management_System_IDP.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("OrderHeaders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Addresstb");
 
                     b.Navigation("ApplicationUser");
                 });

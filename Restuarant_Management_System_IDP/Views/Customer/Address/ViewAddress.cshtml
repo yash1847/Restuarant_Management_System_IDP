@@ -1,0 +1,41 @@
+﻿@model Restuarant_Management_System_IDP.Models.Addresstb
+
+@{
+    ViewData["Title"] = "ViewAddress";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<h1> Address </h1>
+
+<hr />
+<br />
+
+<div class="border backgroundWhite">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info">Update Address</h2>
+        </div>
+    </div>
+    <br />
+    <div class="col-md-10">
+        <div class="row mb-2">
+            <label class="col-4">Address </label>
+            <input asp-for="Address" class="col-8" disabled />
+        </div>
+        <div class="row mb-2">
+            <label class="col-4">City</label>
+            <input asp-for="City" class="col-8" disabled />
+        </div>
+        <div class="row mb-4">
+            <label class="col-4">Pincode</label>
+            <input asp-for="Pincode" class="col-8" disabled />
+        </div>
+        <div class="row justify-content-start pl-1">
+                <a class="btn btn-primary text-white col-2" asp-action="UpsertAddress">Edit Address</a>
+        </div>
+    </div>
+
+</div>
+

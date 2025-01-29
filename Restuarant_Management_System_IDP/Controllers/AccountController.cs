@@ -29,8 +29,8 @@ namespace Restuarant_Management_System_IDP.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-
-            return View();
+            LoginViewModel model = new LoginViewModel();
+            return View(model);
         }
 
         [HttpPost]
@@ -67,18 +67,24 @@ namespace Restuarant_Management_System_IDP.Controllers
             //invalid
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(model);
             }
             var result = await _signInManager.PasswordSignInAsync(model.Username,model.Password,isPersistent:false,lockoutOnFailure:false);
             if (result.Succeeded)
             {
                 var user = _db.Users.Where(u => u.UserName == model.Username).FirstOrDefault();
                 HttpContext.Session.SetString("username", model.Username);
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
+            }
+            else if (result.IsLockedOut)
+            {
+                model.StatusMessage = "You currently locked out, Try after a while";
+                return View(model);
             }
             else
             {
-                return Content("Invalid Email or password");
+                model.StatusMessage = "Invlaid Password or userid";
+                return View(model);
             }
 
         }
@@ -116,9 +122,9 @@ namespace Restuarant_Management_System_IDP.Controllers
                 {
                     await _userManager.AddToRoleAsync(user, SD.Kitchen);
                 }
-                else if (role == SD.FrontDesk)
+                else if (role == SD.Delivery)
                 {
-                    await _userManager.AddToRoleAsync(user, SD.FrontDesk);
+                    await _userManager.AddToRoleAsync(user, SD.Delivery);
                 }
                 else if (role == SD.Admin)
                 {

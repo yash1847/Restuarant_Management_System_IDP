@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
 using System.ComponentModel.DataAnnotations;
 
 namespace Restuarant_Management_System_IDP.Models.ViewModels
@@ -13,6 +14,9 @@ namespace Restuarant_Management_System_IDP.Models.ViewModels
         [Required(ErrorMessage = "Please enter your password")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [ValidateNever]
+        public String StatusMessage { get; set; }
 
     }
 }

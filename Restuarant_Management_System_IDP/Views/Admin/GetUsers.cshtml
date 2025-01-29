@@ -1,0 +1,125 @@
+﻿@model List<UserViewModel>
+
+@{
+    ViewData["Title"] = "Users Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var userType = "";
+}
+
+<br />
+
+<h1>Employee Management</h1>
+<br />
+<br />
+<div class="border backgroundWhite">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info">Employee List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <p>
+                <a asp-action="Register" asp-controller="Account" class="btn btn-info"><i class="bi bi-plus-lg"></i>  Register New Employee</a>
+            </p>
+        </div>
+    </div>
+    <div class="col-6 ml-0">
+        <label for="Roleslist">Filter by Roles </label>
+        <select id="ddlRoleslist" name="Roleslist" class="form-select form-control">
+            <option value="showall" selected>Show all</option>
+            <option value="Customer">Customers</option>
+            <option value="Employee">Employees</option>
+        </select>
+    </div>
+    <br />
+    <div>
+        @if (Model.Count() > 0)
+        {
+            <table class="table table-striped border">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m[0].Name)</th>
+                        <th>@Html.DisplayNameFor(m => m[0].Email)</th>
+                        <th>@Html.DisplayNameFor(m => m[0].PhoneNumber)</th>
+                        <th>@Html.DisplayNameFor(m => m[0].Role)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        @if(user.Role == "Customer"){
+                            userType = "Customer";
+                        }
+                        else{
+                            userType = "Employee";
+                        }
+                        <tr class="@userType role-filter">
+                            <td>@Html.DisplayFor(m => user.Name)</td>
+                            <td>@Html.DisplayFor(m => user.Email)</td>
+                            <td>@Html.DisplayFor(m => user.PhoneNumber)</td>
+                            <td>@Html.DisplayFor(m => user.Role)</td>
+                            <td style="width:200px">
+                                @* <div class="btn-group" role="group"> *@
+                                @if (user.isLocked)
+                                {
+                                    <a class="btn btn-success text-white" asp-action="LockUnlock" asp-route-Id="@user.UserId"><i class="bi bi-unlock"></i> Unlock</a>
+                                }
+                                else{
+                                    <a class="btn btn-warning text-white" asp-action="LockUnlock" asp-route-Id="@user.UserId"><i class="bi bi-lock"></i> Lock</a>
+                                }
+                                    @* <button asp-action="DeleteUser" asp-route-id="@user.UserId" data-message="Are you sure you want to delete this user?" onclick="Delete('@Url.Action("DeleteUser", new { id = user.UserId })', this)" class="btn btn-danger text-white"><i class="fas fa-trash-alt"></i> Delete</button> *@
+                                @* </div> *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No employees found...</p>
+        }
+    </div>
+</div>
+
+@section Scripts{
+    @* <script> *@
+    @*     function Delete(url, button) { *@
+    @*         if (confirm(button.getAttribute('data-message'))) { *@
+    @*             window.location.href = url; *@
+    @*         } *@
+    @*     } *@
+    @* </script> *@
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#ddlRoleslist").change(function(){
+
+                var selectedRole = $("#ddlRoleslist").val();
+                var selectedFilter = "";
+
+                $(".role-filter").hide();
+                
+                if(selectedRole == "showall")
+                {
+                    selectedFilter = ".role-filter";
+                }
+                else if(selectedRole == "Customer"){
+
+                    selectedFilter = ".Customer" ;               
+                }
+                else{
+                    selectedFilter = ".Employee";                    
+                }
+
+                $(selectedFilter).fadeIn();
+                // setTimeout(function () {
+                //     $(selectedFilter).slideDown();
+                // }, 500);
+
+            });
+
+        });
+    </script>
+}
+

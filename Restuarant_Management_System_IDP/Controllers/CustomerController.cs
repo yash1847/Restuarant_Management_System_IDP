@@ -9,47 +9,26 @@ using Restuarant_Management_System_IDP.Repository.IRepository;
 
 namespace Restuarant_Management_System_IDP.Controllers
 {
-    
+    [Authorize(Roles = SD.Customer)]
     public class CustomerController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly MenuViewModel menuViewModel;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public CustomerController(IUnitOfWork unitOfWork, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+
+        public CustomerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
-            _signInManager = signInManager;
-            _roleManager = roleManager;
 
-            menuViewModel = new MenuViewModel()
-            {
-                CategoryList = _unitOfWork.Category.GetAll(x => x.MenuItems.Count() > 0, includeProperties: "SubCategories,MenuItems").ToList(),
-                categorySelectList = _unitOfWork.Category.GetAll(x => x.MenuItems.Count() > 0).Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name }).ToList(),
-                SubCategoryDict = _unitOfWork.SubCategory.GetAll(x => x.MenuItems.Count() > 0).GroupBy(x => x.CategoryId)
-                                  .ToDictionary(g => g.Key, g => g.ToList().Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Name }).ToList()),
-            };
         }
 
         public IActionResult Index()
         {
-            //List<Category> categories = _unitOfWork.Category.GetAll(includeProperties: "SubCategories,MenuItems").ToList();
             return View();
         }
 
-        public IActionResult Menu()
-        {
-            menuViewModel.categorySelectList.Insert(0, new SelectListItem { Value = "showall", Text = "Show All" });
-            //menuItemViewModel.SubCategoryList.Insert(0, new SelectListItem { Value = "showall", Text = "Show All" });
-            //return View(menuItemViewModel);
-            //var menuList = _unitOfWork.Category.GetAll(includeProperties: "SubCategories,MenuItems").ToList();
-            return View(menuViewModel);
-        }
 
-        [Authorize(Roles = SD.Customer)]
         public IActionResult AddToCart(int id) 
         {
             string UserId = _userManager.GetUserId(User);
@@ -84,14 +63,13 @@ namespace Restuarant_Management_System_IDP.Controllers
                 cartList = _unitOfWork.ShoppingCart.GetAll(c => c.ApplicationUserId == _userManager.GetUserId(User), includeProperties: "MenuItem").ToList(),
             };
 
-            foreach(ShoppingCart cartItem in orderDetailsCart.cartList)
+            foreach (ShoppingCart cartItem in orderDetailsCart.cartList)
             {
                 cartItem.MenuItem = _unitOfWork.MenuItem.Get(m => m.Id == cartItem.MenuItemId, includeProperties: "Category,SubCategory");
                 orderDetailsCart.OrderHeader.OrderTotal += (cartItem.MenuItem.Price * cartItem.Count);
             }
 
             return View(orderDetailsCart);
-            //return Json(new { cart = cartItems });
         }
 
         public IActionResult Additem(int id)
@@ -118,6 +96,7 @@ namespace Restuarant_Management_System_IDP.Controllers
             _unitOfWork.Save();
             return RedirectToAction("Cart");
         }
+
         public IActionResult Deleteitem(int id)
         {
             ShoppingCart cartItem = _unitOfWork.ShoppingCart.Get(c => c.ApplicationUserId == _userManager.GetUserId(User) && c.MenuItemId == id);
@@ -129,10 +108,98 @@ namespace Restuarant_Management_System_IDP.Controllers
             return RedirectToAction("Cart");
         }
 
+        public IActionResult Summary()
+        {
+
+            ApplicationUser applicationUser = _userManager.GetUserAsync(User).Result;
+            string userId = _userManager.GetUserId(User);
+
+            SummaryViewModel summaryViewModel = new SummaryViewModel()
+            {
+                OrderHeader = new OrderHeader(),
+                Address = _unitOfWork.Addresstb.Get(u => u.UserId == userId,includeProperties:"ApplicationUser"),
+                cartList = _unitOfWork.ShoppingCart.GetAll(c => c.ApplicationUserId == userId, includeProperties: "MenuItem").ToList(),
+            };
+
+            if (summaryViewModel.Address == null)
+            {
+                return RedirectToAction("UpsertAddress");
+            }
+
+            foreach (ShoppingCart cartItem in summaryViewModel.cartList)
+            {
+                summaryViewModel.OrderHeader.OrderTotal += (cartItem.MenuItem.Price * cartItem.Count);
+            }
+
+            
+            summaryViewModel.OrderHeader.OrderDate = DateTime.Now.Date;
+            summaryViewModel.OrderHeader.PickupName = applicationUser.FullName;
+
+            return View(summaryViewModel);
+
+        }
 
         public IActionResult Profile()
         {
-            return Content("User profile menu");
+            return View();
+        }
+
+        public IActionResult ViewAddress()
+        {
+            Addresstb address = _unitOfWork.Addresstb.Get(u => u.UserId == _userManager.GetUserId(User));
+            return View("Address/ViewAddress", address);
+        }
+
+        public IActionResult UpsertAddress()
+        {
+            Addresstb address = _unitOfWork.Addresstb.Get(u => u.UserId == _userManager.GetUserId(User), includeProperties: "ApplicationUser");
+            if (address == null)
+            {
+                address = new Addresstb();
+                address.ApplicationUser = _userManager.GetUserAsync(User).Result;
+                address.UserId = _userManager.GetUserId(User);
+            }
+            return View("Address/Upsert",address);
+        }
+
+        [HttpPost]
+        public IActionResult UpSertAddress()
+        {
+            Addresstb address = _unitOfWork.Addresstb.Get(u => u.UserId == _userManager.GetUserId(User), includeProperties: "ApplicationUser");
+            if (address == null)
+            {
+                address = new Addresstb();
+                address.ApplicationUser = _userManager.GetUserAsync(User).Result;
+            }
+
+            address.Address = Request.Form["Address"];
+            address.City = Request.Form["City"];
+            address.Pincode = Request.Form["Pincode"];
+            address.UserId = Request.Form["UserId"];
+
+            ModelState.Clear();
+            TryValidateModel(address,nameof(address));
+
+            if (ModelState.IsValid)
+            {
+                Addresstb addressFromDb = _unitOfWork.Addresstb.Get(u => u.UserId == _userManager.GetUserId(User), includeProperties: "ApplicationUser");
+                if (addressFromDb == null)
+                {
+                    address.UserId = _userManager.GetUserId(User);
+                    _unitOfWork.Addresstb.Add(address);
+                }
+                else
+                {
+                    addressFromDb.Address = address.Address;
+                    addressFromDb.City = address.City;
+                    addressFromDb.Pincode = address.Pincode;
+                    _unitOfWork.Addresstb.Update(addressFromDb);
+                }
+                _unitOfWork.Save();
+                return RedirectToAction("ViewAddress");
+            }
+
+            return View("Address/Upsert", address);
         }
     }
 }

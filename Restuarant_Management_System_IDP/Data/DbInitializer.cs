@@ -36,7 +36,7 @@ namespace Restuarant_Management_System_IDP.Data
                 //Create roles
                 _roleManager.CreateAsync(new IdentityRole(SD.Admin)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Kitchen)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.FrontDesk)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(SD.Delivery)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Customer)).GetAwaiter().GetResult();
             }
             //return;

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Restuarant_Management_System_IDP.Models
@@ -11,9 +12,6 @@ namespace Restuarant_Management_System_IDP.Models
         [ForeignKey("ApplicationUser")]
         public string UserId { get; set; }
 
-        [Required]
-        public  string AddressType { get; set; }
-
         [Required(ErrorMessage = "Addresss is required")]
         [MaxLength(50)]
         [MinLength(10, ErrorMessage = "Address must be greater than 10 characters")]
@@ -25,8 +23,10 @@ namespace Restuarant_Management_System_IDP.Models
 
         [Required(ErrorMessage = "Pincode is required")]
         [MaxLength(6,ErrorMessage = "Invalid PinCode")]
-        public string Pincode { get; set; } 
+        [RegularExpression(@"^\d{6}$", ErrorMessage = "Pincode must be exactly 6 digits.")]
+        public string Pincode { get; set; }
 
+        [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; } //navigation property
     }
 }

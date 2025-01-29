@@ -59,6 +59,7 @@ namespace Restuarant_Management_System_IDP.Repository
         public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+            //IQueryable<T> query = dbSet.AsNoTracking();
             if (filter != null)
             {
                 query = query.Where(filter);

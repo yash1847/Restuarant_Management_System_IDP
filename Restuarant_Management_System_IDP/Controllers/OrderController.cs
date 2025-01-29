@@ -1,0 +1,140 @@
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Restuarant_Management_System_IDP.Models;
+using Restuarant_Management_System_IDP.Models.ViewModels;
+using Restuarant_Management_System_IDP.Repository.IRepository;
+
+namespace Restuarant_Management_System_IDP.Controllers
+{
+    public class OrderController : Controller
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
+        //private readonly SignInManager<ApplicationUser> _signInManager;
+        //private readonly RoleManager<IdentityRole> _roleManager;
+
+
+        public OrderController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        {
+            _unitOfWork = unitOfWork;
+            _userManager = userManager;
+            //_signInManager = signInManager;
+            //_roleManager = roleManager;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult PlaceOrder()
+        {
+            string userId = _userManager.GetUserId(User);
+            ApplicationUser applicationUser = _userManager.GetUserAsync(User).Result;
+
+            OrderDetailViewModel orderDetailVM = new OrderDetailViewModel()
+            {
+                OrderHeader = new OrderHeader(),
+                orderDetails = new List<OrderDetail>()
+            };
+
+            //OrderHeader orderHeader = new OrderHeader();
+            //List<OrderDetail> orderDetails = new List<OrderDetail>();
+            List<ShoppingCart> cartList = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == userId,includeProperties:"MenuItem").ToList();
+            Addresstb deliverAddress = _unitOfWork.Addresstb.Get(x => x.UserId == userId);
+            
+            foreach(ShoppingCart cartItem in cartList)
+            {
+                OrderDetail orderDetail = new OrderDetail();
+
+                orderDetail.MenuItemId = cartItem.MenuItemId;
+                orderDetail.Count = cartItem.Count;
+                orderDetail.Price = cartItem.MenuItem.Price;
+                orderDetail.Name = cartItem.MenuItem.Name;
+                orderDetail.Description = cartItem.MenuItem.Description;
+                //orderDetails.Add(orderDetail);
+                orderDetailVM.orderDetails.Add(orderDetail);
+
+                //orderHeader.OrderTotal += (cartItem.MenuItem.Price * cartItem.Count);
+                orderDetailVM.OrderHeader.OrderTotal += (cartItem.MenuItem.Price * cartItem.Count);
+
+
+            }
+
+            //orderHeader.UserId = userId;
+            //orderHeader.PickupName = applicationUser.FullName;
+            //orderHeader.OrderDate = DateTime.Now.Date;
+            //orderHeader.Status = SD.StatusSubmitted;
+            //orderHeader.PaymentStatus = SD.PaymentStatusPending;
+            //orderHeader.DeliverAddress = deliverAddress.Address;
+            //orderHeader.DeliverCity = deliverAddress.City;
+            //orderHeader.DeliverPinCode = deliverAddress.Pincode;
+
+            orderDetailVM.OrderHeader.UserId = userId;
+            orderDetailVM.OrderHeader.PickupName = applicationUser.FullName;
+            orderDetailVM.OrderHeader.OrderDate = DateTime.Now.Date;
+            orderDetailVM.OrderHeader.Status = SD.StatusSubmitted;
+            orderDetailVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
+            orderDetailVM.OrderHeader.DeliverAddress = deliverAddress.Address;
+            orderDetailVM.OrderHeader.DeliverCity = deliverAddress.City;
+            orderDetailVM.OrderHeader.DeliverPinCode = deliverAddress.Pincode;
+
+            orderDetailVM.OrderHeader.ApplicationUser = applicationUser;
+
+            //create orderheader 
+
+            //_unitOfWork.OrderHeader.Add(orderHeader);
+            _unitOfWork.OrderHeader.Add(orderDetailVM.OrderHeader);
+            _unitOfWork.Save();
+
+            //get Orderheader Id
+            foreach (OrderDetail detail in orderDetailVM.orderDetails)
+            {
+                detail.OrderId = orderDetailVM.OrderHeader.Id;
+                _unitOfWork.OrderDetail.Add(detail);
+                _unitOfWork.Save();
+            }
+
+            //delete cartitems
+            foreach (ShoppingCart cartItem in cartList)
+            {
+                _unitOfWork.ShoppingCart.Delete(cartItem);
+                _unitOfWork.Save();
+            }
+
+            return View("OrderConfirmation",orderDetailVM);
+        }
+
+        public IActionResult OrderHistory()
+        {
+            List<OrderDetailViewModel> orders = new List<OrderDetailViewModel>();
+            List<OrderHeader> orderHeaders = _unitOfWork.OrderHeader.GetAll(x => x.UserId == _userManager.GetUserId(User), includeProperties: "ApplicationUser").ToList();
+
+            foreach (OrderHeader orderHeader in orderHeaders)
+            {
+                OrderDetailViewModel individual = new OrderDetailViewModel();
+                individual.OrderHeader = orderHeader;
+                individual.orderDetails = _unitOfWork.OrderDetail.GetAll(x => x.OrderId == orderHeader.Id).ToList();
+                orders.Add(individual);
+            }
+
+            return View(orders);
+
+        }
+
+        public IActionResult OrderDetails(int id)
+        {
+            OrderDetailViewModel orderDetailsViewModel = new OrderDetailViewModel()
+            {
+                OrderHeader = _unitOfWork.OrderHeader.Get(x => x.Id == id),
+                orderDetails = _unitOfWork.OrderDetail.GetAll(o => o.OrderId == id).ToList(),
+            };
+
+            orderDetailsViewModel.OrderHeader.ApplicationUser = _userManager.GetUserAsync(User).Result;
+
+            return View("OrderDetails", orderDetailsViewModel);
+        }
+
+    }
+}

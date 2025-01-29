@@ -16,10 +16,6 @@ namespace Restuarant_Management_System_IDP.Repository
 
         public void Update(SubCategory obj)
         {
-            //SubCategory subCategory = Search(obj.Id);
-            ////_db.SubCategories.Find(obj.Id);
-            ////subCategory = Search(obj.Id);
-            //subCategory.Name = obj.Name;
             _db.SubCategories.Update(obj);
         }
     }

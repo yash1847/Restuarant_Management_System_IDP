@@ -1,0 +1,121 @@
+﻿@model OrderDetailViewModel
+@{
+    ViewData["Title"] = "Confirm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<div class="backgroundWhite">
+    <div class="row px-3">
+        <div class="col-8">
+            <h2 class="text-info">Order Confirmed</h2>
+        </div>
+        <div class="col-4 text-right">
+            <a asp-action="Index" asp-controller="Home" class="btn btn-success form-control">New Order</a>
+        </div>
+    </div>
+
+    @if (Model.OrderHeader != null)
+    {
+        <div style="color:maroon" class="p-3">
+            Your order has been confirmed! Please see the order summary below.
+            <br />
+        </div>
+        <form>
+            <div class="container row border ml-1 backgroundWhiteBorder10Padding" style="width:100%">
+                <div class="col-lg-8 col-12" style="border-right:1px solid #bbb9b9">
+                    <br />
+                    @* <input type="hidden" asp-for="OrderHeader.Id" /> *@
+
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-9">
+                            <input asp-for="OrderHeader.PickupName" disabled class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label asp-for="OrderHeader.OrderDate"></label>
+                        </div>
+                        <div class="col-9">
+                            <input asp-for="OrderHeader.OrderDate" disabled class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label asp-for="OrderHeader.DeliverAddress"></label>
+                        </div>
+                        <div class="col-9">
+                            <input asp-for="OrderHeader.DeliverAddress" disabled class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label asp-for="OrderHeader.ApplicationUser.PhoneNumber"></label>
+                        </div>
+                        <div class="col-9">
+                            <input asp-for="OrderHeader.ApplicationUser.PhoneNumber" disabled class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label asp-for="OrderHeader.DeliverCity"></label>
+                        </div>
+                        <div class="col-9">
+                            <input asp-for="OrderHeader.DeliverCity" disabled class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label asp-for="OrderHeader.DeliverPinCode"></label>
+                        </div>
+                        <div class="col-9">
+                            <input asp-for="OrderHeader.DeliverPinCode" disabled class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label asp-for="OrderHeader.OrderTotal"></label>
+                        </div>
+                        <div class="col-9">
+                            <input asp-for="OrderHeader.OrderTotal" disabled class="form-control" />
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="col-lg-4 col-12">
+                    <h4 class="d-flex justify-content-between align-content-center mb-3">
+                        <span class="text-muted">Order ID: </span>
+                        <span class="badge badge-secondary badge-pill">@Model.OrderHeader.Id</span>
+                    </h4>
+                    <ul class="list-group mb-3">
+                        @foreach (var details in Model.orderDetails)
+                        {
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <h6 class="my-0">@details.Name</h6>
+                                    <small class="text-muted">Quantity: @details.Count</small>
+                                </div>
+                                <span class="text-muted">$@(details.Price * details.Count)</span>
+                            </li>
+                        }
+                        <li class="list-group-item d-flex justify-content-between bg-light">
+                            <span class="text-info"> Total </span>
+                            <span class="text-info">@Model.OrderHeader.OrderTotal ₹</span>
+                        </li>
+                    </ul>
+                    <button type="submit" class="btn btn-info form-control" disabled>@Model.OrderHeader.Status</button>
+                </div>
+            </div>
+        </form>
+    }
+    else
+    {
+        <div class="text-danger">
+            Error.... Please try again to confirm your order
+        </div>
+    }
+</div>

@@ -27,7 +27,15 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">   
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-white-50" asp-controller="Home" asp-action="Menu">Menu</a>
+                        </li>
+                        @if(User.IsInRole(SD.Customer)){
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50" asp-controller="Order" asp-action="OrderHistory">Order History</a>
+                            </li>
+                        }
                         @if (User.IsInRole(SD.Admin)){
 
                             <li class="nav-item dropdown">
@@ -40,21 +48,21 @@
                                     <a class="dropdown-item" asp-action="MenuItem" asp-controller="ManageMenu">MenuItem</a>
                                 </div>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50" asp-controller="Admin" asp-action="GetUsers">Manage Users</a>
+                            </li>
 
-                            @* <li class="nav-item"> *@
-                            @*     <a class="nav-link" asp-action="Category" asp-controller="ManageMenu">Category</a> *@
-                            @* </li> *@
-                            @* <li class="nav-item"> *@
-                            @*     <a class="nav-link" asp-action="SubCategory" asp-controller="ManageMenu">Sub Category</a> *@
-                            @* </li> *@
-                            @* <li class="nav-item"> *@
-                            @*     <a class="nav-link" asp-action="MenuItem" asp-controller="ManageMenu">MenuItem</a> *@
-                            @* </li> *@
                         }
 
                         <li class="nav-item">
                             <a class="nav-link text-white-50" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+
+                        @if(User.IsInRole(SD.Customer)){
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50" asp-controller="Customer" asp-action="Cart"><i class="bi bi-cart"></i> Cart</a>
+                            </li>
+                        }
 
                     </ul>
 
