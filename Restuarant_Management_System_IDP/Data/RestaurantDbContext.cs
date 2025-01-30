@@ -37,6 +37,7 @@ namespace Restuarant_Management_System_IDP.Data
             });
 
         }
+        public DbSet<Restuarant_Management_System_IDP.Models.ViewModels.ProfileViewModel> ProfileViewModel { get; set; } = default!;
 
 
     }

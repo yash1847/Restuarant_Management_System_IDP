@@ -8,12 +8,36 @@
     <h1>Welcome to Food Bytes</h1>
 </div>
 
-<h1>Restaurant</h1>
+@* <h1>Restaurant</h1>
 <br />
-<br />
+<br /> *@
+
+<style>
+    .banner_section {
+        /* background-image: url("../images/homepage.jpg"); */
+        background-size: cover;
+        background-position: center;
+        padding: 100px 0;
+        color: white;
+        text-align: center;
+    }
+
+    .btn_main .btn {
+        margin: 10px;
+        padding: 15px 30px;
+        font-size: 1.5rem;
+    }
+</style>
 
 @* categories page with the image of the first menuitem in the category *@
 
-<div class="border backgroundWhite">
-    
+<div class="hero-section text-center py-5 align-content-end" style="background-image: url('/images/homepage4.jpg'); background-size: no-repeat; background-position: center; max-width: 100%;
+height: 600px;  ">
+    <div class="container">
+        <strong>
+        <h1 class="display-4 text-white">Welcome to Food Bytes</h1>
+        <p class="lead text-white">"Fresh food, delivered right to you"</p>
+        </strong>
+        <a asp-action="Menu" asp-controller="Home" class="btn btn-success btn-lg mt-3">Browse Menu</a>
+    </div>
 </div>

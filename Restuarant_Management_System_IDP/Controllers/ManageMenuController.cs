@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
+using Newtonsoft.Json;
 using NuGet.Protocol;
 using Restuarant_Management_System_IDP.Data;
 using Restuarant_Management_System_IDP.Models;
@@ -17,6 +18,8 @@ namespace Restuarant_Management_System_IDP.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly HttpClient _httpClient;
+        private readonly string _apiBaseUrl = "https://localhost:7072/api/Categories";
 
         [BindProperty]
         private MenuItemViewModel menuItemVM { get; set; }
@@ -27,6 +30,7 @@ namespace Restuarant_Management_System_IDP.Controllers
         {
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
+            _httpClient = new HttpClient();
 
             subCategoryAndCategoryVM = new SubCategoryAndCategoryViewModel()
             {
@@ -45,9 +49,18 @@ namespace Restuarant_Management_System_IDP.Controllers
         }
 
         //[Route("Category")]
-        public IActionResult Category()
+        public async Task<IActionResult> Category()
         {
-            var category_list = _unitOfWork.Category.GetAll();
+            var response = await _httpClient.GetAsync(_apiBaseUrl);
+            IEnumerable<Category> category_list = new List<Category>();
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonData = await response.Content.ReadAsStringAsync();
+                category_list = JsonConvert.DeserializeObject<IEnumerable<Category>>(jsonData);
+            }
+
+            //var category_list = _unitOfWork.Category.GetAll();
             return View("Category/Index", category_list);
         }
 

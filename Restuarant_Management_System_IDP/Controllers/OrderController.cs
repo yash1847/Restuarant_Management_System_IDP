@@ -111,7 +111,7 @@ namespace Restuarant_Management_System_IDP.Controllers
         public IActionResult OrderHistory()
         {
             List<OrderDetailViewModel> orders = new List<OrderDetailViewModel>();
-            List<OrderHeader> orderHeaders = _unitOfWork.OrderHeader.GetAll(x => x.UserId == _userManager.GetUserId(User), includeProperties: "ApplicationUser").ToList();
+            List<OrderHeader> orderHeaders = _unitOfWork.OrderHeader.GetAll(x => x.UserId == _userManager.GetUserId(User), includeProperties: "ApplicationUser").OrderByDescending(x => x.Id).ToList();
 
             foreach (OrderHeader orderHeader in orderHeaders)
             {
@@ -138,6 +138,7 @@ namespace Restuarant_Management_System_IDP.Controllers
             return View("OrderDetails", orderDetailsViewModel);
         }
 
+        [Authorize(Roles = SD.Admin + "," + SD.Kitchen)]
         public IActionResult ManageOrder()
         {
             List<OrderDetailViewModel> orders = new List<OrderDetailViewModel>();
@@ -152,6 +153,7 @@ namespace Restuarant_Management_System_IDP.Controllers
             return View(orders);
         }
 
+        [Authorize(Roles = SD.Admin + "," + SD.Kitchen)]
         public IActionResult OrderPrepare(int? OrderId)
         {
             if (OrderId == null) { return NotFound(); }
@@ -165,6 +167,7 @@ namespace Restuarant_Management_System_IDP.Controllers
             return RedirectToAction("ManageOrder", "Order");
         }
 
+        [Authorize(Roles = SD.Admin + "," + SD.Kitchen)]
         public IActionResult OrderReady(int? OrderId)
         {
             if (OrderId == null) { return NotFound(); }
@@ -180,6 +183,7 @@ namespace Restuarant_Management_System_IDP.Controllers
             return RedirectToAction("ManageOrder");
         }
 
+        [Authorize(Roles = SD.Admin + "," + SD.Delivery)]
         public IActionResult OrderPickup()
         {
             List<OrderDetailViewModel> orders = new List<OrderDetailViewModel>();
@@ -196,7 +200,8 @@ namespace Restuarant_Management_System_IDP.Controllers
             return View(orders);
 
         }
-            
+
+        [Authorize(Roles = SD.Admin + "," + SD.Delivery)]
         public IActionResult OrderDelivery(int? OrderId)
         {
             if (OrderId == null) { return NotFound(); }
@@ -210,6 +215,21 @@ namespace Restuarant_Management_System_IDP.Controllers
             _unitOfWork.Save();
 
             return RedirectToAction("OrderPickup");
+        }
+
+        [Authorize(Roles = SD.Admin)]
+        public IActionResult OrderCancel(int? OrderId)
+        {
+            if (OrderId == null) { return NotFound(); }
+
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(x => x.Id == OrderId,tracked:true);
+
+            if (orderHeader == null) { return NotFound(); }
+
+            orderHeader.Status = SD.StatusCancelled;
+            _unitOfWork.Save();
+
+            return RedirectToAction("MangeOrder");
         }
 
     }

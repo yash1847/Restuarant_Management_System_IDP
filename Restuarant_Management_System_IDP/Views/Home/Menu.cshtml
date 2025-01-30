@@ -125,6 +125,7 @@
                 var selectedSubCategoryid = $("#ddlSubCategoryList").val();
                 var selectedSubCategorytext = '.' + $("#ddlSubCategoryList option:selected").text();
 
+
                 if(selectedCategoryid != "showall"){
 
                     filterBySubCategory(selectedCategorytext,selectedSubCategoryid,selectedSubCategorytext);
@@ -164,6 +165,7 @@
                 //hide the subcategory filter
                 $("#subCategorylist").hide();
 
+
                 //empty the filter and add just show all option
                 $("#ddlSubCategoryList").empty();
                 $("#ddlSubCategoryList").html("<option value='showall'>Show All</option>");
@@ -195,7 +197,9 @@
             else{
 
                 $(allsubCategories).fadeOut();
-                var selectedSubCategoryclass = selectedCategorytext + selectedSubCategorytext;
+                var selectedSubCategoryclass = selectedSubCategorytext;
+                selectedSubCategoryclass = selectedSubCategoryclass.replace(/\s+/g, '');
+                console.log(selectedSubCategoryclass);
                 setTimeout(function(){
                     $(selectedSubCategoryclass).slideDown();
                 }, 300);

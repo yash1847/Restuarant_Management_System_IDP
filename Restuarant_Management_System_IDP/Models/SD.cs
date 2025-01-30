@@ -16,6 +16,7 @@
         public const string StatusInProcess = "Being Prepared";
         public const string StatusReady = "On Delivery";
         public const string StatusDelivered = "Delivered";
+        public const string StatusCancelled = "Cancelled";
 
         // Payment Status
         public const string PaymentStatusPending = "Pending";

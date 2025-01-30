@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using Restuarant_Management_System_IDP.Data;
 using Restuarant_Management_System_IDP.Models;
 using Restuarant_Management_System_IDP.Models.ViewModels;
@@ -26,8 +27,23 @@ namespace Restuarant_Management_System_IDP.Controllers
 
         public IActionResult Dashboard()
         {
+            var adminDashboardVM = new AdminDashboardViewModel();
+            getMetrics(adminDashboardVM);
+            return View(adminDashboardVM);
+            //return Json(new {data = adminDashboardVM });
             return Content("Admin Dashboard");
         }
+
+        private void getMetrics(AdminDashboardViewModel adminDashboardVM)
+        {
+            adminDashboardVM.OrdersSubmitted = _unitOfWork.OrderHeader.GetAll(x => x.Status == SD.StatusSubmitted).Count();
+            adminDashboardVM.OrdersonDelivery = _unitOfWork.OrderHeader.GetAll(x => x.Status == SD.StatusReady).Count();
+            adminDashboardVM.OrdersCompleted = _unitOfWork.OrderHeader.GetAll(x => x.Status == SD.StatusDelivered).Count();
+            adminDashboardVM.UsersRegistered = _userManager.GetUsersInRoleAsync(SD.Customer).Result.Count;
+            adminDashboardVM.EmployeesRegistered = _userManager.Users.Count() - adminDashboardVM.UsersRegistered;
+            adminDashboardVM.TotalSales = _unitOfWork.OrderHeader.GetAll().Sum(x => x.OrderTotal);
+        }
+
         public IActionResult Profile()
         {
             return Content("Admin Profile");

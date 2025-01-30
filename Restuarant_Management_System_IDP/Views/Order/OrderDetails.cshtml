@@ -5,12 +5,25 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    var OrderStatus = Model.OrderHeader.Status;
+    var Buttoncolor = "btn-info";
+    if (OrderStatus == SD.StatusCancelled)
+    {
+        Buttoncolor = "btn-danger";
+    }
+    else if (OrderStatus == SD.StatusDelivered)
+    {
+        Buttoncolor = "btn-success";
+    }
+}
+
 <h1>OrderDetails</h1>
 
 @if (Model.OrderHeader != null)
 {
     <div style="color:maroon" class="p-3">
-        Your order has been confirmed! Please see the order summary below.
+        Your order has been @OrderStatus! Please see the order summary below.
         <br />
     </div>
     <form>
@@ -103,7 +116,7 @@
                         <span class="text-info">@Model.OrderHeader.OrderTotal ₹</span>
                     </li>
                 </ul>
-                <button type="submit" class="btn btn-info form-control" disabled>@Model.OrderHeader.Status</button>
+                <button type="submit" class="btn @Buttoncolor form-control" disabled>@Model.OrderHeader.Status</button>
             </div>
         </div>
     </form>

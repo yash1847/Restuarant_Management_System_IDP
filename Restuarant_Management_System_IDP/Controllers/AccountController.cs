@@ -48,7 +48,14 @@ namespace Restuarant_Management_System_IDP.Controllers
                 int shoppingCartCount = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == _userManager.GetUserId(User)).Count();
                 HttpContext.Session.SetString(SD.ShoppingCartCount, shoppingCartCount.ToString());
                 //SD.ShoppingCartCount = shoppingCartCount.ToString();
-                return RedirectToAction("Index", "Home");
+                if (User.IsInRole(SD.Customer))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return RedirectToAction("Dashboard", "Admin");
+                }
             }
             else if (result.IsLockedOut)
             {
@@ -120,7 +127,7 @@ namespace Restuarant_Management_System_IDP.Controllers
                 };
                 _unitOfWork.User.Add(newUser);
                 _unitOfWork.Save();
-                return Content("User added successfully");
+                return RedirectToAction("Login");
             }
             return View();
         }
@@ -133,7 +140,63 @@ namespace Restuarant_Management_System_IDP.Controllers
 
         public IActionResult Profile()
         {
-            return View();            
+            var user = _userManager.GetUserAsync(User).Result;
+            ProfileViewModel profileVM = new ProfileViewModel()
+            {
+                Id = user.Id,
+                Name = user.FullName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber
+            };
+            return View(profileVM);            
         }
+
+        [HttpPost]
+        public async  Task<IActionResult> Profile(ProfileViewModel profileVM)
+        {
+            ModelState.Remove("Email");
+            var user = await _userManager.GetUserAsync(User);
+
+            if (!ModelState.IsValid)
+            {
+                profileVM = new ProfileViewModel()
+                {
+                    Id = user.Id,
+                    Name = user.FullName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber
+                };
+                return View(profileVM);
+            }
+
+            //var user = await _userManager.GetUserAsync(User)
+
+            user.UserName = profileVM.Name;
+            user.PhoneNumber = profileVM.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                await _signInManager.RefreshSignInAsync(user);
+                return RedirectToAction("Profile");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            profileVM = new ProfileViewModel()
+            {
+                Id = user.Id,
+                Name = user.FullName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber
+            };
+
+            return View(profileVM);
+        }
+
+
     }
 }

@@ -1,0 +1,74 @@
+﻿@model AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<br />
+<h2 class="text-info">Admin Dashboard</h2>
+<hr />
+<div class="container row bg-white p-2 border mb-3 rounded">
+    <div class="container mt-4">
+        <div class="row col-12 justify-content-around mx-3 my-3">
+            <div class="col-5">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Orders Submitted</h5>
+                        <p class="card-text">@Model.OrdersSubmitted</p>
+                        <a href="@Url.Action("ManageOrder", "Order")" class="btn btn-light">Manage Orders</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Orders on Delivery</h5>
+                        <p class="card-text">@Model.OrdersonDelivery</p>
+                        <a href="@Url.Action("OrderPickup", "Order")" class="btn btn-light">Order Delivery</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row col-12 justify-content-around mx-2 my-3 ">
+            <div class="col-5">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Employees Registered</h5>
+                        <p class="card-text">@Model.EmployeesRegistered</p>
+                        <a href="@Url.Action("GetUsers", "Admin")" class="btn btn-light">Manage Employees</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Users Registered</h5>
+                        <p class="card-text">@Model.UsersRegistered</p>
+                        <a href="@Url.Action("GetUsers", "Admin")" class="btn btn-light">Manage Users</a>
+                    </div>
+                </div>
+            </div>
+            </div> 
+        <div class="row col-12 justify-content-around mx-2 my-3">
+            <div class="col-5">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Orders Completed</h5>
+                        <p class="card-text">@Model.OrdersCompleted</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="card text-white bg-dark mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Sales</h5>
+                        <p class="card-text">@Model.TotalSales ₹</p>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
