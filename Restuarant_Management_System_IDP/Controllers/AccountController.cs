@@ -36,34 +36,6 @@ namespace Restuarant_Management_System_IDP.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            /*
-            if (ModelState.IsValid)
-            {
-                //User? user = _unitOfWork.User.Get(u => u.UserName == model.Username);
-                /*
-                 * if (user == null)
-                //{
-                //    return Content("User does not exist");
-                //}
-                //if (user.Password != model.Password)
-                //{
-                //    return Content("Invalid user or password");
-                //}
-                //HttpContext.Session.SetString("username",model.Username);
-                //HttpContext.Session.SetString("role", user.Role);
-                //if(user.Role == "Admin")
-                //{
-                //    return RedirectToAction("Index", "Home");
-                //}
-                //else if(user.Role == "User")
-                //{
-                //    return RedirectToAction("Index", "Home");
-                //}
-                //return Content("Invalid role");
-                
-                
-            }
-        */
             //invalid
             if (!ModelState.IsValid)
             {
@@ -72,8 +44,10 @@ namespace Restuarant_Management_System_IDP.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.Username,model.Password,isPersistent:false,lockoutOnFailure:false);
             if (result.Succeeded)
             {
-                var user = _db.Users.Where(u => u.UserName == model.Username).FirstOrDefault();
-                HttpContext.Session.SetString("username", model.Username);
+
+                int shoppingCartCount = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == _userManager.GetUserId(User)).Count();
+                HttpContext.Session.SetString(SD.ShoppingCartCount, shoppingCartCount.ToString());
+                //SD.ShoppingCartCount = shoppingCartCount.ToString();
                 return RedirectToAction("Index", "Home");
             }
             else if (result.IsLockedOut)
@@ -153,22 +127,13 @@ namespace Restuarant_Management_System_IDP.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            //HttpContext.Session.Clear();
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         public IActionResult Profile()
         {
-            var username = HttpContext.Session.GetString("username");
-            if(username == "admin")
-            {
-                return RedirectToAction("Profile", "Admin");
-            }
-            else
-            {
-                return RedirectToAction("Profile", "Customer");
-            }
+            return View();            
         }
     }
 }

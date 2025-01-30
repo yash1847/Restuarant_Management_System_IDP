@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Restuarant_Management_System_IDP.Models;
@@ -41,10 +42,10 @@ namespace Restuarant_Management_System_IDP.Controllers
 
             //OrderHeader orderHeader = new OrderHeader();
             //List<OrderDetail> orderDetails = new List<OrderDetail>();
-            List<ShoppingCart> cartList = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == userId,includeProperties:"MenuItem").ToList();
+            List<ShoppingCart> cartList = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == userId, includeProperties: "MenuItem").ToList();
             Addresstb deliverAddress = _unitOfWork.Addresstb.Get(x => x.UserId == userId);
-            
-            foreach(ShoppingCart cartItem in cartList)
+
+            foreach (ShoppingCart cartItem in cartList)
             {
                 OrderDetail orderDetail = new OrderDetail();
 
@@ -74,6 +75,7 @@ namespace Restuarant_Management_System_IDP.Controllers
             orderDetailVM.OrderHeader.UserId = userId;
             orderDetailVM.OrderHeader.PickupName = applicationUser.FullName;
             orderDetailVM.OrderHeader.OrderDate = DateTime.Now.Date;
+            orderDetailVM.OrderHeader.DeliveryTime = DateTime.Now.AddMinutes(30);
             orderDetailVM.OrderHeader.Status = SD.StatusSubmitted;
             orderDetailVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
             orderDetailVM.OrderHeader.DeliverAddress = deliverAddress.Address;
@@ -103,7 +105,7 @@ namespace Restuarant_Management_System_IDP.Controllers
                 _unitOfWork.Save();
             }
 
-            return View("OrderConfirmation",orderDetailVM);
+            return View("OrderConfirmation", orderDetailVM);
         }
 
         public IActionResult OrderHistory()
@@ -134,6 +136,80 @@ namespace Restuarant_Management_System_IDP.Controllers
             orderDetailsViewModel.OrderHeader.ApplicationUser = _userManager.GetUserAsync(User).Result;
 
             return View("OrderDetails", orderDetailsViewModel);
+        }
+
+        public IActionResult ManageOrder()
+        {
+            List<OrderDetailViewModel> orders = new List<OrderDetailViewModel>();
+            List<OrderHeader> orderHeaders = _unitOfWork.OrderHeader.GetAll(o => o.Status == SD.StatusSubmitted || o.Status == SD.StatusInProcess, includeProperties: "ApplicationUser").OrderBy(x => x.Id).ToList();
+            foreach (OrderHeader orderHeader in orderHeaders)
+            {
+                OrderDetailViewModel individual = new OrderDetailViewModel();
+                individual.OrderHeader = orderHeader;
+                individual.orderDetails = _unitOfWork.OrderDetail.GetAll(x => x.OrderId == orderHeader.Id).ToList();
+                orders.Add(individual);
+            }
+            return View(orders);
+        }
+
+        public IActionResult OrderPrepare(int? OrderId)
+        {
+            if (OrderId == null) { return NotFound(); }
+
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(x => x.Id == OrderId,tracked:true);
+
+            if (orderHeader == null) { return NotFound(); }
+
+            orderHeader.Status = SD.StatusInProcess;
+            _unitOfWork.Save();
+            return RedirectToAction("ManageOrder", "Order");
+        }
+
+        public IActionResult OrderReady(int? OrderId)
+        {
+            if (OrderId == null) { return NotFound(); }
+
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(x => x.Id == OrderId,tracked:true);
+
+            if (orderHeader == null) { return NotFound(); }
+
+            orderHeader.Status = SD.StatusReady;
+
+            _unitOfWork.Save();
+
+            return RedirectToAction("ManageOrder");
+        }
+
+        public IActionResult OrderPickup()
+        {
+            List<OrderDetailViewModel> orders = new List<OrderDetailViewModel>();
+            List<OrderHeader> orderHeaders = _unitOfWork.OrderHeader.GetAll(u => u.Status == SD.StatusReady, includeProperties: "ApplicationUser").OrderBy(x => x.Id).ToList();
+            
+            foreach (OrderHeader orderHeader in orderHeaders)
+            {
+                OrderDetailViewModel individual = new OrderDetailViewModel();
+                individual.OrderHeader = orderHeader;
+                individual.orderDetails = _unitOfWork.OrderDetail.GetAll(x => x.OrderId == orderHeader.Id).ToList();
+                orders.Add(individual);
+            }
+
+            return View(orders);
+
+        }
+            
+        public IActionResult OrderDelivery(int? OrderId)
+        {
+            if (OrderId == null) { return NotFound(); }
+
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(x => x.Id == OrderId,tracked:true);
+
+            if (orderHeader == null) { return NotFound(); }
+
+            orderHeader.Status = SD.StatusDelivered;
+
+            _unitOfWork.Save();
+
+            return RedirectToAction("OrderPickup");
         }
 
     }

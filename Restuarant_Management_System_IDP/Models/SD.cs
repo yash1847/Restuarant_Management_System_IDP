@@ -15,13 +15,15 @@
         public const string StatusSubmitted = "Submitted";
         public const string StatusInProcess = "Being Prepared";
         public const string StatusReady = "On Delivery";
-        public const string StatusCompleted = "Delivered";
-        //public const string StatusCancelled = "Cancelled";
+        public const string StatusDelivered = "Delivered";
 
         // Payment Status
         public const string PaymentStatusPending = "Pending";
         public const string PaymentStatusApproved = "Approved";
         public const string PaymentStatusRejected = "Rejected";
+
+        //Cart Count
+        public const string ShoppingCartCount = "";
 
     }
 }

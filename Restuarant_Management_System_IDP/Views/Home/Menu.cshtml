@@ -60,14 +60,6 @@
                                         <img src="@menuItem.Image" class="img-fluid img-thumbnail" style="border-radius:5px;border:1px solid #bbb9b9" />
                                     </div>
                                     <!--Name and price-->
-                                    @*
-                                    <div class="col-md-9 col-sm-12">
-                                        <div class="col-4 text-primary pr-0" style="font-size:21px;color:maroon">@menuItem.Name</div>
-                                        <div class="col-4 text-end pl-0" style="color:maroon">
-                                            <h4>@menuItem.Price ₹</h4>
-                                        </div>
-                                    </div>
-                                    *@
                                     <div class="col-md-9 col-sm-12">
                                         <div class="row px-4">
                                             <div class="text-primary col-6 px-0" style="font-size:21px;color:maroon">@menuItem.Name</div>
@@ -80,12 +72,13 @@
                                             <p class="px-0">@Html.Raw(menuItem.Description)</p>
                                         </div>
                                         <!--Details-->
-                                        <div class="row px-4 justify-content-end">
-                                            <a asp-action="AddToCart" asp-controller="Customer" asp-route-id="@menuItem.Id" class="btn btn-success col-md-4 col-sm-12 form-control">Add to Cart</a>
-                                        </div>
+                                        @if (User.IsInRole(SD.Customer))
+                                        {
+                                            <div class="row px-4 justify-content-end">
+                                                <a asp-action="AddToCart" asp-controller="Customer" asp-route-id="@menuItem.Id" class="btn btn-success col-md-4 col-sm-12 form-control">Add to Cart</a>
+                                            </div>
+                                        }
                                     </div>
-                                    <!--Menu Description-->
-
                                 </div>
                             </section>
 

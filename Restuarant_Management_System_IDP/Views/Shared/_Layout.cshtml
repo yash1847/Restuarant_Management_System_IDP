@@ -51,7 +51,33 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white-50" asp-controller="Admin" asp-action="GetUsers">Manage Users</a>
                             </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="manageOrderDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Order Manage
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="manageOrderDropdown">
+                                    <a class="dropdown-item" asp-action="ManageOrder" asp-controller="Order">Manage Order</a>
+                                    <a class="dropdown-item" asp-action="OrderPickup" asp-controller="Order">Order Delivery</a>
+                                </div>
+                            </li>
+                        }
+                        @if(User.IsInRole(SD.Kitchen) || User.IsInRole(SD.Delivery)){
+                            <li class="nav-item dropdown text-white-50">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Order
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropDown">
+                                    @if (User.IsInRole(SD.Kitchen))
+                                    {
+                                        <a class="dropdown-item" asp-action="ManageOrder" asp-controller="Order">Manage Order</a>
+                                    }
+                                    @if (User.IsInRole(SD.Delivery))
+                                    {
+                                        <a class="dropdown-item" asp-action="OrderPickup" asp-controller="Order">Order Pickup</a>
+                                    }
+                                </div>
 
+                            </li>
                         }
 
                         <li class="nav-item">
