@@ -229,7 +229,7 @@ namespace Restuarant_Management_System_IDP.Controllers
             orderHeader.Status = SD.StatusCancelled;
             _unitOfWork.Save();
 
-            return RedirectToAction("MangeOrder");
+            return RedirectToAction("ManageOrder");
         }
 
     }

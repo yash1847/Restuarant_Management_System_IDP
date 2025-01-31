@@ -30,8 +30,6 @@ namespace Restuarant_Management_System_IDP.Controllers
             var adminDashboardVM = new AdminDashboardViewModel();
             getMetrics(adminDashboardVM);
             return View(adminDashboardVM);
-            //return Json(new {data = adminDashboardVM });
-            return Content("Admin Dashboard");
         }
 
         private void getMetrics(AdminDashboardViewModel adminDashboardVM)

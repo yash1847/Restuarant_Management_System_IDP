@@ -30,6 +30,7 @@ namespace Restuarant_Management_System_IDP.Controllers
         public IActionResult Login()
         {
             LoginViewModel model = new LoginViewModel();
+            ViewData["Message"] = TempData["Message"] == null ? "" : TempData["Message"].ToString();
             return View(model);
         }
 
@@ -48,13 +49,13 @@ namespace Restuarant_Management_System_IDP.Controllers
                 int shoppingCartCount = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == _userManager.GetUserId(User)).Count();
                 HttpContext.Session.SetString(SD.ShoppingCartCount, shoppingCartCount.ToString());
                 //SD.ShoppingCartCount = shoppingCartCount.ToString();
-                if (User.IsInRole(SD.Customer))
+                if (User.IsInRole(SD.Admin))
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Dashboard", "Admin");
                 }
                 else
                 {
-                    return RedirectToAction("Dashboard", "Admin");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             else if (result.IsLockedOut)
@@ -127,6 +128,7 @@ namespace Restuarant_Management_System_IDP.Controllers
                 };
                 _unitOfWork.User.Add(newUser);
                 _unitOfWork.Save();
+                TempData["Message"] = "Registration Successfull";
                 return RedirectToAction("Login");
             }
             return View();
@@ -135,6 +137,7 @@ namespace Restuarant_Management_System_IDP.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+            TempData["Message"] = "You have successfully logged out";
             return RedirectToAction("Login", "Account");
         }
 

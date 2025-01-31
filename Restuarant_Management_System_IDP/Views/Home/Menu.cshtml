@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     // List<SelectListItem> =
     var subCartegories = Model.CategoryList[0].SubCategories;
+    bool userIsNotEmployee = !(User.IsInRole(SD.Admin) || User.IsInRole(SD.Kitchen) || User.IsInRole(SD.Delivery));
 }
 
 <h1>Food Byte's Menu</h1>
@@ -18,14 +19,14 @@
     </div>
     <br />
     <form id="searchForm" asp-action="">
-        <div class="row form-group mb-3">
-            @* <div class="col-10 pr-0">
+        @* <div class="row form-group mb-3">
+            <div class="col-10 pr-0">
                 <input type="text" class="form-control" id="searchQuery" name="searchQuery" placeholder="Search Menu" />
             </div>
             <div class="col-2 pl-0">
                 <button type="submit" class="btn btn-success w-100"><i class="bi bi-search"></i></button>
-            </div> *@
-        </div>
+            </div>
+        </div> *@
         <div class="row form-group mb-3">
             <div class="col-6">
                 <label for="CategoryList">Filter by Categories: </label>
@@ -72,7 +73,7 @@
                                             <p class="px-0">@Html.Raw(menuItem.Description)</p>
                                         </div>
                                         <!--Details-->
-                                        @if (User.IsInRole(SD.Customer))
+                                        @if (userIsNotEmployee)
                                         {
                                             <div class="row px-4 justify-content-end">
                                                 <a asp-action="AddToCart" asp-controller="Customer" asp-route-id="@menuItem.Id" class="btn btn-success col-md-4 col-sm-12 form-control">Add to Cart</a>

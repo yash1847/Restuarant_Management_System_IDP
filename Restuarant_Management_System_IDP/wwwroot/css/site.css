@@ -146,3 +146,20 @@ body {
         background-color: #545b62;
         color: #fff;
     }
+
+
+#toast-container > .toast-success {
+    background-color: #28a745; /* Green for success */
+}
+
+#toast-container > .toast-error {
+    background-color: #dc3545; /* Red for error */
+}
+
+#toast-container > .toast-warning {
+    background-color: #ffc107; /* Yellow for warning */
+}
+
+#toast-container > .toast-info {
+    background-color: #17a2b8; /* Blue for info */
+}
