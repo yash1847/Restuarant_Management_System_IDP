@@ -8,7 +8,7 @@ namespace Restuarant_Management_System_IDP.Data
     public class RestaurantDbContext : IdentityDbContext<ApplicationUser>
     {
         //public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public virtual DbSet<Usertb> Userstb { get; set; }
+        //public virtual DbSet<Usertb> Userstb { get; set; }
         public virtual DbSet<Addresstb> Addressess { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<SubCategory> SubCategories { get; set; }

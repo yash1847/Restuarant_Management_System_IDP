@@ -42,13 +42,25 @@ namespace Restuarant_Management_System_IDP.Controllers
             {
                 return View(model);
             }
-            var result = await _signInManager.PasswordSignInAsync(model.Username,model.Password,isPersistent:false,lockoutOnFailure:false);
+
+            //sign in with email too..
+            var usr = _userManager.FindByEmailAsync(model.Username).Result;
+
+            string userName = usr == null ? model.Username : usr.UserName;
+            
+            //if(usr != null)
+            //{
+            //    userName = usr.UserName;
+            //}
+
+            var result = await _signInManager.PasswordSignInAsync(userName,model.Password,isPersistent:false,lockoutOnFailure:false);
             if (result.Succeeded)
             {
 
                 int shoppingCartCount = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == _userManager.GetUserId(User)).Count();
                 HttpContext.Session.SetString(SD.ShoppingCartCount, shoppingCartCount.ToString());
                 //SD.ShoppingCartCount = shoppingCartCount.ToString();
+                TempData["Message"] = "You have successfully logged in";
                 if (User.IsInRole(SD.Admin))
                 {
                     return RedirectToAction("Dashboard", "Admin");
@@ -60,12 +72,12 @@ namespace Restuarant_Management_System_IDP.Controllers
             }
             else if (result.IsLockedOut)
             {
-                model.StatusMessage = "You currently locked out, Try after a while";
+                model.StatusMessage = "Error: You currently locked out, Try after a while";
                 return View(model);
             }
             else
             {
-                model.StatusMessage = "Invlaid Password or userid";
+                model.StatusMessage = "Error: Invlaid credentials";
                 return View(model);
             }
 
@@ -117,25 +129,33 @@ namespace Restuarant_Management_System_IDP.Controllers
                     await _userManager.AddToRoleAsync(user, SD.Customer);
                 }
 
-                Usertb newUser = new Usertb()
-                {
-                    UserName = model.UserName,
-                    FullName = model.FullName,
-                    Password = model.Password,
-                    Email = model.Email,
-                    Contact = model.Contact,
-                    Role = "User"
-                };
-                _unitOfWork.User.Add(newUser);
-                _unitOfWork.Save();
+                //Usertb newUser = new Usertb()
+                //{
+                //    UserName = model.UserName,
+                //    FullName = model.FullName,
+                //    Password = model.Password,
+                //    Email = model.Email,
+                //    Contact = model.Contact,
+                //    Role = "User"
+                //};
+                //_unitOfWork.User.Add(newUser);
+                //_unitOfWork.Save();
                 TempData["Message"] = "Registration Successfull";
                 return RedirectToAction("Login");
             }
-            return View();
+            else
+            {
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+            return View(model);
         }
 
         public async Task<IActionResult> Logout()
         {
+            HttpContext.Session.Clear();
             await _signInManager.SignOutAsync();
             TempData["Message"] = "You have successfully logged out";
             return RedirectToAction("Login", "Account");
@@ -144,6 +164,7 @@ namespace Restuarant_Management_System_IDP.Controllers
         public IActionResult Profile()
         {
             var user = _userManager.GetUserAsync(User).Result;
+            ViewData["Message"] = TempData["Message"] == null ? "" : TempData["Message"].ToString();
             ProfileViewModel profileVM = new ProfileViewModel()
             {
                 Id = user.Id,
@@ -174,13 +195,14 @@ namespace Restuarant_Management_System_IDP.Controllers
 
             //var user = await _userManager.GetUserAsync(User)
 
-            user.UserName = profileVM.Name;
+            user.FullName = profileVM.Name;
             user.PhoneNumber = profileVM.PhoneNumber;
 
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
                 await _signInManager.RefreshSignInAsync(user);
+                TempData["Messagge"] = "Profile updated successfully";
                 return RedirectToAction("Profile");
             }
 

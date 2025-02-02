@@ -17,8 +17,11 @@ namespace Restuarant_Management_System_IDP.Repository
 
         public void Update(Usertb obj)
         {
-            _db.Userstb.Update(obj);
+            return;
+            //_db.Userstb.Update(obj);
         }
+
+
 
         /*
         public UserRepository(RestaurantDbContext context)

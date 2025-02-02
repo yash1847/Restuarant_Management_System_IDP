@@ -20,6 +20,7 @@ namespace Restuarant_Management_System_IDP.Controllers
             _logger = logger;
             _unitOfWork = unitOfWork;
 
+
             menuViewModel = new MenuViewModel()
             {
                 CategoryList = _unitOfWork.Category.GetAll(x => x.MenuItems.Count() > 0, includeProperties: "SubCategories,MenuItems").ToList(),
@@ -32,6 +33,7 @@ namespace Restuarant_Management_System_IDP.Controllers
 
         public IActionResult Index()
         {
+            ViewData["Message"] = TempData["Message"] as String;
             return View();
         }
 

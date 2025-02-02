@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "Menu";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    // List<SelectListItem> =
     var subCartegories = Model.CategoryList[0].SubCategories;
     bool userIsNotEmployee = !(User.IsInRole(SD.Admin) || User.IsInRole(SD.Kitchen) || User.IsInRole(SD.Delivery));
 }
@@ -18,27 +17,28 @@
         </div>
     </div>
     <br />
-    <form id="searchForm" asp-action="">
-        @* <div class="row form-group mb-3">
-            <div class="col-10 pr-0">
-                <input type="text" class="form-control" id="searchQuery" name="searchQuery" placeholder="Search Menu" />
+    @if(Model.CategoryList.Count >  0){
+        <form id="searchForm" asp-action="">
+            @* <div class="row form-group mb-3">
+                <div class="col-10 pr-0">
+                    <input type="text" class="form-control" id="searchQuery" name="searchQuery" placeholder="Search Menu" />
+                </div>
+                <div class="col-2 pl-0">
+                    <button type="submit" class="btn btn-success w-100"><i class="bi bi-search"></i></button>
+                </div>
+            </div> *@
+            <div class="row form-group mb-3">
+                <div class="col-6">
+                    <label for="CategoryList">Filter by Categories: </label>
+                    <select id="ddlCategoryList" name="CategoryList" asp-items="Model.categorySelectList" class="form-select form-control"></select>
+                </div>
+                <div id="subCategorylist" class="col-6">
+                    <label for="SubCategoryList">Filter by SubCategories: </label>
+                    <select id="ddlSubCategoryList" name="SubCategoryList" asp-items="@(new SelectList(string.Empty,"Id","Name"))" class="form-select form-control"></select>
+                </div>
             </div>
-            <div class="col-2 pl-0">
-                <button type="submit" class="btn btn-success w-100"><i class="bi bi-search"></i></button>
-            </div>
-        </div> *@
-        <div class="row form-group mb-3">
-            <div class="col-6">
-                <label for="CategoryList">Filter by Categories: </label>
-                <select id="ddlCategoryList" name="CategoryList" asp-items="Model.categorySelectList" class="form-select form-control"></select>
-            </div>
-            <div id="subCategorylist" class="col-6">
-                <label for="SubCategoryList">Filter by SubCategories: </label>
-                <select id="ddlSubCategoryList" name="SubCategoryList" asp-items="@(new SelectList(string.Empty,"Id","Name"))" class="form-select form-control"></select>
-            </div>
-        </div>
-    </form>
-    @foreach (var category in Model.CategoryList)
+        </form>
+        @foreach (var category in Model.CategoryList)
     {
         <div class="col-12 @category.Name.Replace(" ",string.Empty) menu-category">
             <div class="row">
@@ -88,6 +88,12 @@
                     </div>
                 }
             }
+        </div>
+    }
+    }
+    else{
+        <div>
+            <h3>No Menu Items Exist</h3>
         </div>
     }
 </div>

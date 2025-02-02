@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Restuarant_Management_System_IDP.Repository.IRepository;
 using Restuarant_Management_System_IDP.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -6,8 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Restuarant_Management_System_IDP.Data;
 using Restuarant_Management_System_IDP;
 using Restuarant_Management_System_IDP.Models;
-using Microsoft.Extensions.DependencyInjection;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +23,7 @@ builder.Services.AddDbContext<RestaurantDbContext>(options =>
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                     {
+                        options.User.RequireUniqueEmail = true;
                         options.Password.RequireDigit = true;
                         options.Password.RequireLowercase = true;
                         options.Password.RequireNonAlphanumeric = false;

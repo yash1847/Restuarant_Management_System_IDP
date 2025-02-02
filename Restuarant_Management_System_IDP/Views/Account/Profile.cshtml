@@ -36,7 +36,18 @@
     </div>
 </div>
 
-<div>
+@* <div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div> *@
 
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            var message = '@ViewData["Message"]';
+            if(message){
+                toastr.success(message);
+            }
+        });
+    </script>
+}

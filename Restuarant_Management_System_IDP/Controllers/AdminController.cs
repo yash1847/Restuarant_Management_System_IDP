@@ -28,6 +28,7 @@ namespace Restuarant_Management_System_IDP.Controllers
         public IActionResult Dashboard()
         {
             var adminDashboardVM = new AdminDashboardViewModel();
+            ViewData["Message"] = TempData["Message"] as String;
             getMetrics(adminDashboardVM);
             return View(adminDashboardVM);
         }

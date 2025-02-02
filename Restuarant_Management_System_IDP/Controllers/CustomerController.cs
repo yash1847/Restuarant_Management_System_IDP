@@ -68,6 +68,7 @@ namespace Restuarant_Management_System_IDP.Controllers
                 cartItem.MenuItem = _unitOfWork.MenuItem.Get(m => m.Id == cartItem.MenuItemId, includeProperties: "Category,SubCategory");
                 orderDetailsCart.OrderHeader.OrderTotal += (cartItem.MenuItem.Price * cartItem.Count);
             }
+            HttpContext.Session.SetString(SD.ShoppingCartCount, orderDetailsCart.cartList.Count.ToString());
 
             return View(orderDetailsCart);
         }
