@@ -63,19 +63,12 @@ namespace Restuarant_Management_System_IDP.Controllers
 
             }
 
-            //orderHeader.UserId = userId;
-            //orderHeader.PickupName = applicationUser.FullName;
-            //orderHeader.OrderDate = DateTime.Now.Date;
-            //orderHeader.Status = SD.StatusSubmitted;
-            //orderHeader.PaymentStatus = SD.PaymentStatusPending;
-            //orderHeader.DeliverAddress = deliverAddress.Address;
-            //orderHeader.DeliverCity = deliverAddress.City;
-            //orderHeader.DeliverPinCode = deliverAddress.Pincode;
+       
 
             orderDetailVM.OrderHeader.UserId = userId;
             orderDetailVM.OrderHeader.PickupName = applicationUser.FullName;
             orderDetailVM.OrderHeader.OrderDate = DateTime.Now.Date;
-            orderDetailVM.OrderHeader.DeliveryTime = DateTime.Now.AddMinutes(30);
+            orderDetailVM.OrderHeader.OrderTime = DateTime.Now.AddMinutes(30);
             orderDetailVM.OrderHeader.Status = SD.StatusSubmitted;
             orderDetailVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
             orderDetailVM.OrderHeader.DeliverAddress = deliverAddress.Address;

@@ -7,6 +7,7 @@
 <h1>Login</h1>
 
 <partial name="_StatusMessage" model="Model.StatusMessage" />
+<partial name="_Notification" />
 
 
 <hr />
@@ -41,16 +42,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        $(document).ready(function() {
-            var message = '@ViewData["Message"]';
-            // console.log(message);
-            if(message){
-                toastr.success(message);
-            }
-            // toastr.success('Welcome to the application!');
-            // toastr.success('', '', { timeOut: 1500, extendedTimeOut: 1000 });
-            // console.log("working?");
-        });
-    </script>
 }

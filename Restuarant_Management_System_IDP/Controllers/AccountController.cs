@@ -30,7 +30,7 @@ namespace Restuarant_Management_System_IDP.Controllers
         public IActionResult Login()
         {
             LoginViewModel model = new LoginViewModel();
-            ViewData["Message"] = TempData["Message"] == null ? "" : TempData["Message"].ToString();
+            ViewData["Message"] = TempData["Message"] as String;
             return View(model);
         }
 
@@ -59,7 +59,6 @@ namespace Restuarant_Management_System_IDP.Controllers
 
                 int shoppingCartCount = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == _userManager.GetUserId(User)).Count();
                 HttpContext.Session.SetString(SD.ShoppingCartCount, shoppingCartCount.ToString());
-                //SD.ShoppingCartCount = shoppingCartCount.ToString();
                 TempData["Message"] = "You have successfully logged in";
                 if (User.IsInRole(SD.Admin))
                 {
@@ -80,7 +79,6 @@ namespace Restuarant_Management_System_IDP.Controllers
                 model.StatusMessage = "Error: Invlaid credentials";
                 return View(model);
             }
-
         }
 
         [HttpGet]
@@ -164,7 +162,8 @@ namespace Restuarant_Management_System_IDP.Controllers
         public IActionResult Profile()
         {
             var user = _userManager.GetUserAsync(User).Result;
-            ViewData["Message"] = TempData["Message"] == null ? "" : TempData["Message"].ToString();
+            ViewData["Message"] = TempData["Message"] as String;
+
             ProfileViewModel profileVM = new ProfileViewModel()
             {
                 Id = user.Id,
@@ -202,7 +201,7 @@ namespace Restuarant_Management_System_IDP.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.RefreshSignInAsync(user);
-                TempData["Messagge"] = "Profile updated successfully";
+                TempData["Message"] = "Profile updated successfully";
                 return RedirectToAction("Profile");
             }
 

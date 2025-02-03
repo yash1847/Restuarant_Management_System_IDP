@@ -43,10 +43,6 @@ namespace Restuarant_Management_System_IDP.Controllers
             adminDashboardVM.TotalSales = _unitOfWork.OrderHeader.GetAll().Sum(x => x.OrderTotal);
         }
 
-        public IActionResult Profile()
-        {
-            return Content("Admin Profile");
-        }
 
         public async Task<IActionResult> GetUsers()
         {

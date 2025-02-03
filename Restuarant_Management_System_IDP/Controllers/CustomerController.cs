@@ -140,14 +140,12 @@ namespace Restuarant_Management_System_IDP.Controllers
 
         }
 
-        public IActionResult Profile()
-        {
-            return View();
-        }
 
         public IActionResult ViewAddress()
         {
             Addresstb address = _unitOfWork.Addresstb.Get(u => u.UserId == _userManager.GetUserId(User));
+            ViewData["Message"] = TempData["Message"] as String;
+
             return View("Address/ViewAddress", address);
         }
 
@@ -188,6 +186,8 @@ namespace Restuarant_Management_System_IDP.Controllers
                 {
                     address.UserId = _userManager.GetUserId(User);
                     _unitOfWork.Addresstb.Add(address);
+                    TempData["Message"] = "Address added successfully";
+
                 }
                 else
                 {
@@ -195,6 +195,8 @@ namespace Restuarant_Management_System_IDP.Controllers
                     addressFromDb.City = address.City;
                     addressFromDb.Pincode = address.Pincode;
                     _unitOfWork.Addresstb.Update(addressFromDb);
+                    TempData["Message"] = "Address updated successfully";
+
                 }
                 _unitOfWork.Save();
                 return RedirectToAction("ViewAddress");

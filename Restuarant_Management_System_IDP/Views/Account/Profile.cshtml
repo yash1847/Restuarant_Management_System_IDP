@@ -7,6 +7,9 @@
 
 <h1>Profile</h1>
 
+<partial name="_Notification" />
+
+
 <h4>ProfileViewModel</h4>
 <hr />
 <div class="row">
@@ -35,19 +38,3 @@
         </form>
     </div>
 </div>
-
-@* <div>
-    <a asp-action="Index">Back to List</a>
-</div> *@
-
-
-@section Scripts {
-    <script>
-        $(document).ready(function() {
-            var message = '@ViewData["Message"]';
-            if(message){
-                toastr.success(message);
-            }
-        });
-    </script>
-}

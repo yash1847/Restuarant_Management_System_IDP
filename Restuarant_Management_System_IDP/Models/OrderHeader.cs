@@ -29,9 +29,9 @@ namespace Restuarant_Management_System_IDP.Models
         [Display(Name = "Order Total")]
         public double OrderTotal { get; set; }
 
-        [Display(Name = "Pickup Time")]
+        [Display(Name = "Order Time")]
         [DataType(DataType.Time)]
-        public DateTime DeliveryTime { get; set; }
+        public DateTime OrderTime { get; set; }
 
         public string Status { get; set; }
         public string PaymentStatus { get; set; }

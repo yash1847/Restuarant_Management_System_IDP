@@ -28,9 +28,17 @@
     </div>
     <form>
         <div class="container row border ml-1 backgroundWhiteBorder10Padding" style="width:100%">
-            <div class="row justify-content-start">
-                <a asp-action="OrderHistory" asp-controller="Order" class="btn btn-info col-3"><i class="bi bi-arrow-left"></i>  View Order History</a>
-            </div>
+            @if(User.IsInRole(SD.Customer))
+            {
+                <div class="row justify-content-start">
+                    <a asp-action="OrderHistory" asp-controller="Order" class="btn btn-info col-3"><i class="bi bi-arrow-left"></i>  View Order History</a>
+                </div>
+            }
+            else{
+                <div class="row justify-content-start">
+                    <a asp-action="OrderPickup" asp-controller="Order" class="btn btn-info col-3"><i class="bi bi-arrow-left"></i>  Go Back</a>
+                </div>
+            }
             <br />
             <div class="col-lg-8 col-12" style="border-right:2px solid #bbb9b9">
                 <br />

@@ -27,13 +27,12 @@
                             @Html.DisplayNameFor(m => m[0].OrderHeader.ApplicationUser.Email)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(m => m[0].OrderHeader.DeliveryTime)
+                            @Html.DisplayNameFor(m => m[0].OrderHeader.OrderTime)
                         </th>
                         <th>
                             @Html.DisplayNameFor(m => m[0].OrderHeader.OrderTotal)
                         </th>
                         <th>
-                            Total Items
                         </th>
                         <th></th>
                     </tr>
@@ -50,15 +49,17 @@
                                 @Html.DisplayFor(m => item.OrderHeader.ApplicationUser.Email)
                             </td>
                             <td>
-                                @Html.DisplayFor(m => item.OrderHeader.DeliveryTime)
+                                @Html.DisplayFor(m => item.OrderHeader.OrderTime)
                             </td>
                             <td>
                                 @Html.DisplayFor(m => item.OrderHeader.OrderTotal)
                             </td>
                             <td>
-                                <button type="submit" class="btn btn-success form-control" asp-action="OrderDelivery" asp-controller="Order" asp-route-OrderId="@item.OrderHeader.Id">
+                                <button type="submit" class="btn btn-success form-control col-12" asp-action="OrderDelivery" asp-controller="Order" asp-route-OrderId="@item.OrderHeader.Id">
                                     <i class="far fa-list-alt"></i> Order Delivered
                                 </button>
+                                <a asp-action="OrderDetails" asp-controller="Order" asp-route-id="@item.OrderHeader.Id" class="btn btn-info col-12 mt-2"><i class="bi bi-card-list"></i> Details</a>
+
                             </td>
                         </tr>
                     }

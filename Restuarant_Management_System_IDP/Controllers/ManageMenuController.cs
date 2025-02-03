@@ -48,7 +48,6 @@ namespace Restuarant_Management_System_IDP.Controllers
 
         }
 
-        //[Route("Category")]
         public async Task<IActionResult> Category()
         {
             var response = await _httpClient.GetAsync(_apiBaseUrl);

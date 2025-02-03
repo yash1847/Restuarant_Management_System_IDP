@@ -8,9 +8,7 @@
     <h1>Welcome to Food Bytes</h1>
 </div>
 
-@* <h1>Restaurant</h1>
-<br />
-<br /> *@
+<partial name="_Notification" />
 
 <style>
     .banner_section {
@@ -46,14 +44,4 @@ height: 600px;  ">
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script>
-        $(document).ready(function() {
-            var message = '@ViewData["Message"]';
-            console.log(message);
-            console.log('.');
-            if(message){
-                toastr.success(message);
-            }
-        });
-    </script>
 }

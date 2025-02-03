@@ -21,23 +21,10 @@ namespace Restuarant_Management_System_IDP.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<ShoppingCart>().HasKey(x => new { x.Id, x.MenuItemId });
-
             modelBuilder.Entity<ShoppingCart>().HasKey(x => new { x.ApplicationUserId, x.MenuItemId });
 
-            modelBuilder.Entity<Usertb>().HasData(new Usertb
-            {
-                UserId = 1,
-                UserName = "admin",
-                FullName = "Yaswanth",
-                Email = "admin@gmail.com",
-                Contact = "9090909090",
-                Password = "Admin123",
-                Role = "Admin"
-            });
 
         }
-        public DbSet<Restuarant_Management_System_IDP.Models.ViewModels.ProfileViewModel> ProfileViewModel { get; set; } = default!;
 
 
     }
